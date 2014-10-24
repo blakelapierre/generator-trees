@@ -1,1 +1,3 @@
-console.log('Now run you some ECMAScript 6!');
+var generators = require('./generators.js');
+
+console.log(generators);
