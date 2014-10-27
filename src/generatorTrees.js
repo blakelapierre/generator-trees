@@ -44,13 +44,13 @@ function* loop(g) {
   }
 }
 
-// q: an array of generators
-// A generator that loops through `q` in round-robin fashion,
+// A generator that loops through a generator of generators in round-robin fashion,
 // yielding the next value from each generator
 // until all values have been generated
-function* loopUntilEmpty(q) {
-  var next = 0;
-
+function* loopUntilEmpty(generator) {
+  var q = toArray(generator),
+      next = 0;
+console.log('queue', q);
   while (q.length > 0) {
     next = next % q.length;
     var generator = q[next],
@@ -279,17 +279,6 @@ function* makeNode(value, children) {
   else return value;
 }
 
-function* toGenerator(array) {
-  var length = array.length;
-
-  if (length == 0) throw Error('What should we do here?');
-  if (length == 1) return array[0];
-
-  var i;
-  for (i = 0; i < length - 1; i++) yield array[i];
-  return array[i];
-}
-
 // There are multiple ways to implement this function...
 function* repeat(generator, count) {
   var values = [];
@@ -321,6 +310,16 @@ function toArray(generator) {
     array.push(result.value);
     if (result.done) return array;
   }
+}
+
+function* toGenerator(array) {
+  var length = array.length;
+
+  if (length == 0) throw Error('What should we do here?');
+
+  var i = 0;
+  for (i; i < length - 1; i++) yield array[i];
+  return array[i];
 }
 
 function toNode(generator) {

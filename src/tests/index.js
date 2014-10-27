@@ -294,7 +294,7 @@ function* clusterMachineGenerator(machineCount, prefix) {
 }
 
 function* generator2() {
-  var loop = generators.loopUntilEmpty(q),
+  var loop = generators.loopUntilEmpty(toGenerator(q)),
       queue = loop.next().value;
   var generatorResult;
   do {
@@ -312,7 +312,7 @@ function* generator2() {
 }
 
 function* generator3() {
-  var loop = generators.loopUntilEmpty(q),
+  var loop = generators.loopUntilEmpty(toGenerator(q)),
       queue = loop.next().value;
   var generatorResult;
   do {
@@ -329,13 +329,11 @@ function* generator3() {
   } while (!generatorResult.done);
 }
 
-var gen = generators.loopUntilEmpty(q);
+var gen = generators.loopUntilEmpty(toGenerator(q));
 
-var i = 0,
-    result;
-do {
-  // if (i == 21) q.remove(0);
-  // if (i == 30) q.add(1, clusterMachineGenerator(4));
-  result = gen.next();
-  if (!result.done) console.log(i++, result.value);
-} while (!result.done);
+var i = 0;
+while (true) {
+  var result = gen.next();
+  console.log(i++, result);
+  if (result.done) break;
+}
