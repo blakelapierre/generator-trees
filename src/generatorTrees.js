@@ -218,65 +218,31 @@ function* postorder(node) {
 function* breadthFirst(node, indent) {
   indent = indent || '';
   if (!node) {
-    trace('node was undefined', node);
+    console.log('node was undefined', node);
   }
-
-  trace('breadthFirst', node);
 
   var valueResult = node.next(),
       value = valueResult.value;
-
-  trace('valueResult', valueResult);
 
   if (valueResult.done) return value;
 
   yield value;
 
-  // var queue = toArray(transform(node, value => { return {generator: value}; }));
-
-  // var index = 0;
-  // while (index < queue.length) {
-  //   trace('index', index);
-  //   trace('queue', queue);
-  //   var generator = queue[index].generator,
-  //       result = generator.next();
-
-  //   trace('yielding', result);
-
-  //   if (result.done) {
-  //     queue.splice(index, 1);
-  //     if (queue.length == 0) return result.value;
-  //     index = index - 1;
-  //   }
-
-  //   yield result.value;
-
-  //   index = index + 1;
-  // }
-
   var queue = [{generator:node}];
 
   while (queue.length != 0) {
-    trace('processing', queue);
     var generator = queue.shift();
 
-    trace('gen', generator);
     while (true) {
       var result = generator.generator.next(),
           childGenerator = result.value;
 
-      trace('childResult', result);
-
       var firstResult = childGenerator.next();
 
-      trace('queue yielding', firstResult);
-
       if (firstResult.done) {
-        trace('was a value node!', firstResult.value);
         if (result.done && queue.length == 0) return firstResult.value;
       }
       else {
-        trace('pushing children of', firstResult.value, 'queue length', queue.length);
         queue.push({parent: firstResult.value, generator: childGenerator});
       }
 
@@ -284,94 +250,6 @@ function* breadthFirst(node, indent) {
 
       if (result.done) break;
     }
-  }
-
-
-
-  // while (true) {
-  //   var result = node.next();
-  //       childGenerator = result.value;
-
-  //   var valueResult = childGenerator.next();
-
-  //   if (!valueResult.done) queue.push(childGenerator);
-  //   else {
-
-  //   }
-  // }
-
-
-
-
-  // var generators = [];
-
-  // while (true) {
-  //   var result = node.next(),
-  //       childGenerator = breadthFirst(result.value, indent + ' ');
-
-  //   trace('result', result);
-
-  //   var firstResult = childGenerator.next(result.done);
-  //   trace('firstResult', firstResult);
-
-  //   if (!firstResult.done) {
-  //     trace('pushing', childGenerator, 'for', firstResult);
-  //     generators.push(childGenerator);
-  //   }
-
-  //   if (result.done) {
-  //     trace('generator size', generators);
-  //     if (generators.length == 0) return firstResult.value;
-  //     yield firstResult.value;
-  //     break;
-  //   }
-
-  //   yield firstResult.value;
-  // }
-
-  // trace('generators', generators);
-  // var index = 0;
-  // while (true) {
-  //   var generator = generators[index],
-  //       result = generator.next();
-
-  //   trace('index', index, 'generatorResult', result);
-
-  //   if (result.done) {
-  //     generators.splice(index, 1);
-
-  //     if (generators.length == 0) return result.value;
-  //     yield result.value;
-  //   }
-  //   else {
-  //     trace('index', index, 'mid result', result);
-
-  //     var childGenerator = result.value;
-
-  //     var firstResult = childGenerator.next();
-  //     trace('index', index, 'firstResult', firstResult);
-
-  //     if (!firstResult.done) {
-  //       trace('index', index, 'pushing', childGenerator, 'for', firstResult);
-  //       generators.push(childGenerator);
-  //     }
-
-  //     if (result.done) {
-  //       generators.splice(index, 1);
-
-  //       if (generators.length == 0) return firstResult.value;
-
-  //       index = index - 1;
-  //     }
-
-  //     yield firstResult.value;
-  //   }
-
-  //   index = (index + 1) % generators.length;
-  // }
-
-  function trace(...args) {
-    console.log(indent, ...args);
   }
 }
 

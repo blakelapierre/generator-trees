@@ -206,20 +206,19 @@ function print(generator, prefix) {
 
 
 function* parseAsNode(obj, value) {
-  console.log('toNode');
+
   value = value || '@@root';
 
   var generator = makeNode(value, () => childrenFunction(obj));
-  console.log('generator', generator);
+
   while (true) {
     var result = generator.next();
-    console.log('result', result);
+
     if (result.done) return result.value;
     else yield result.value;
   }
 
   function* childrenFunction(obj) {
-    console.log('childrenFunction', obj);
     if (obj.length) {
       for (var i = 0; i < obj.length - 1; i++) yield makeNode(obj[i]);
       return makeNode(obj[i]);
@@ -233,7 +232,6 @@ function* parseAsNode(obj, value) {
         var key = keys[i];
         var childValue = obj[key];
 
-        console.log('yielding node', key, childValue);
         yield makeNode(key, (childValue => () => childrenFunction(childValue))(childValue));
 
         // There should be a call to makeNode in here somehweret
