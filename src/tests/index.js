@@ -1,6 +1,6 @@
 var generators = require('../generatorTrees');
 
-var {preorder, inorder, postorder, breadthFirst, gMap, gEach, toGenerator, toArray, makeNode, toNode, asNode} = generators;
+var {preorder, inorder, postorder, breadthFirst, loopUntilEmpty, gMap, gEach, toGenerator, toArray, makeNode, toNode, asNode} = generators;
 
 function* test() {
   yield 1;
@@ -87,6 +87,26 @@ var basicTree = {
 };
 
 testTree('basic tree', basicTree);
+
+var binaryTree = {
+  'root': {
+    'one': 1,
+    'two': 2
+  }
+};
+
+testTree('binary tree', binaryTree);
+
+var simpleTree = {
+  'root': {
+    'level1': {
+      'level2': 2,
+      'wut': 'this'
+    }
+  }
+};
+
+testTree('simple tree', simpleTree);
 
 
 var tree = {
@@ -199,6 +219,7 @@ function* parseAsNode(obj, value) {
   }
 
   function* childrenFunction(obj) {
+    console.log('childrenFunction', obj);
     if (obj.length) {
       for (var i = 0; i < obj.length - 1; i++) yield makeNode(obj[i]);
       return makeNode(obj[i]);
@@ -212,7 +233,8 @@ function* parseAsNode(obj, value) {
         var key = keys[i];
         var childValue = obj[key];
 
-        yield makeNode(key, () => childrenFunction(childValue));
+        console.log('yielding node', key, childValue);
+        yield makeNode(key, (childValue => () => childrenFunction(childValue))(childValue));
 
         // There should be a call to makeNode in here somehweret
         // var generator = toNode(childValue, key);
@@ -263,10 +285,13 @@ var q = [
 
 function* clusterMachineGenerator(machineCount, prefix) {
   prefix = prefix || '';
-  for (var i = 0; i < machineCount; i++) yield generateMachine(i);
+  var i;
+  for (i = 0; i < machineCount - 1; i++) yield generateMachine(i);
+
+  return generateMachine(i);
 
   function generateMachine(number) {
-    return { id: prefix + i.toString() };
+    return { id: prefix + number.toString() };
   }
 }
 
@@ -288,7 +313,25 @@ function* generator2() {
   } while (!generatorResult.done);
 }
 
-var gen = generator2();
+function* generator3() {
+  var loop = generators.loopUntilEmpty(q),
+      queue = loop.next().value;
+  var generatorResult;
+  do {
+    generatorResult = loop.next();
+
+    if (generatorResult.done) return;
+    else {
+      var machineGenerator = generatorResult.value,
+          machineResult = machineGenerator.next();
+
+      if (machineResult.done) queue.remove(machineGenerator);
+      else yield machineResult.value;
+    }
+  } while (!generatorResult.done);
+}
+
+var gen = generators.loopUntilEmpty(q);
 
 var i = 0,
     result;
