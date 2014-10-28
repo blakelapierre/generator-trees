@@ -1,3 +1,5 @@
-var generators = require('./generators.js');
+var generators = require('./generators');
 
-console.log(generators);
+module.exports = {
+  generators: generators
+};
