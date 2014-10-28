@@ -2414,6 +2414,6 @@ System.get("traceur-runtime@0.0.61/src/runtime/polyfills/polyfills" + '');
 var __moduleName = "src_index";
 var $___47_home_47_blake_47_development_47_generator_45_trees_47_node_95_modules_47_grunt_45_traceur_47_node_95_modules_47_traceur_47_bin_47_traceur_45_runtime_46_js__;
 ($___47_home_47_blake_47_development_47_generator_45_trees_47_node_95_modules_47_grunt_45_traceur_47_node_95_modules_47_traceur_47_bin_47_traceur_45_runtime_46_js__ = require("/home/blake/development/generator-trees/node_modules/grunt-traceur/node_modules/traceur/bin/traceur-runtime.js"), $___47_home_47_blake_47_development_47_generator_45_trees_47_node_95_modules_47_grunt_45_traceur_47_node_95_modules_47_traceur_47_bin_47_traceur_45_runtime_46_js__ && $___47_home_47_blake_47_development_47_generator_45_trees_47_node_95_modules_47_grunt_45_traceur_47_node_95_modules_47_traceur_47_bin_47_traceur_45_runtime_46_js__.__esModule && $___47_home_47_blake_47_development_47_generator_45_trees_47_node_95_modules_47_grunt_45_traceur_47_node_95_modules_47_traceur_47_bin_47_traceur_45_runtime_46_js__ || {default: $___47_home_47_blake_47_development_47_generator_45_trees_47_node_95_modules_47_grunt_45_traceur_47_node_95_modules_47_traceur_47_bin_47_traceur_45_runtime_46_js__});
-var generators = require('./generators.js');
-console.log(generators);
+var generators = require('./generators');
+module.exports = {generators: generators};
 //# sourceMappingURL=index.js.map

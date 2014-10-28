@@ -2605,8 +2605,7 @@ function* generator3() {
   } while (!generatorResult.done);
 }
 var gen = generators.loopUntilEmpty(toGenerator(q));
-var i = 0,
-    result;
+var i = 0;
 while (true) {
   var result = gen.next();
   console.log(i++, result);
