@@ -1,6 +1,7 @@
-var generators = require('../generatorTrees');
+var generators = require('../index');
 
-var {preorder, inorder, postorder, breadthFirst, loopUntilEmpty, gMap, gEach, toGenerator, toArray, makeNode, toNode, asNode} = generators;
+var {preorder, inorder, postorder, breadthFirst, makeNode, toNode, asNode} = generators.t;
+var {interleave, map, each, toGenerator, toArray} = generators.g;
 
 function* test() {
   yield 1;
@@ -37,24 +38,24 @@ var addition = () => {
 console.log(asNode(makeNode, 1, makeNode('+', [makeNode(3), makeNode(4)])));
 
 console.log('\npreorder addition');
-gEach(preorder(addition()), value => console.log('log', value));
+each(preorder(addition()), value => console.log('log', value));
 console.log(toArray(preorder(addition())));
 
 console.log('\ninorder addition');
-gEach(inorder(addition()), value => console.log('log', value));
+each(inorder(addition()), value => console.log('log', value));
 console.log(toArray(inorder(addition())));
 
 console.log('\npostorder addition');
-gEach(postorder(addition()), value => console.log('log', value));
+each(postorder(addition()), value => console.log('log', value));
 console.log(toArray(postorder(addition())));
 
 console.log('\nbreadthFirst addition');
-gEach(breadthFirst(addition()), value => console.log('log', value));
+each(breadthFirst(addition()), value => console.log('log', value));
 console.log(toArray(breadthFirst(addition())));
 
 console.log('\ndepthFirst addition2');
 var addition2 = toGenerator(['+', toGenerator([1]), toGenerator([2])]);
-gMap(inorder(addition2), value => console.log('log', value));
+each(inorder(addition2), value => console.log('log', value));
 
 var treeNode = () => {
   return makeNode('root', [
@@ -67,7 +68,7 @@ var treeNode = () => {
 };
 
 console.log('\ntreeNode');
-gMap(inorder(treeNode()), value => console.log('tr', value));
+map(inorder(treeNode()), value => console.log('tr', value));
 
 
 function testTree(name, tree) {
@@ -294,7 +295,7 @@ function* clusterMachineGenerator(machineCount, prefix) {
 }
 
 function* generator2() {
-  var loop = generators.loopUntilEmpty(toGenerator(q)),
+  var loop = interleave(toGenerator(q)),
       queue = loop.next().value;
   var generatorResult;
   do {
@@ -312,7 +313,7 @@ function* generator2() {
 }
 
 function* generator3() {
-  var loop = generators.loopUntilEmpty(toGenerator(q)),
+  var loop = interleave(toGenerator(q)),
       queue = loop.next().value;
   var generatorResult;
   do {
@@ -329,7 +330,7 @@ function* generator3() {
   } while (!generatorResult.done);
 }
 
-var gen = generators.loopUntilEmpty(toGenerator(q));
+var gen = interleave(toGenerator(q));
 
 var i = 0;
 while (true) {

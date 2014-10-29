@@ -2411,141 +2411,23 @@ System.register("traceur-runtime@0.0.61/src/runtime/polyfills/polyfills", [], fu
 });
 System.get("traceur-runtime@0.0.61/src/runtime/polyfills/polyfills" + '');
 "use strict";
-var __moduleName = "src_generators";
+var __moduleName = "src_tests/generators";
 var $___47_home_47_blake_47_development_47_generator_45_trees_47_node_95_modules_47_grunt_45_traceur_47_node_95_modules_47_traceur_47_bin_47_traceur_45_runtime_46_js__;
 ($___47_home_47_blake_47_development_47_generator_45_trees_47_node_95_modules_47_grunt_45_traceur_47_node_95_modules_47_traceur_47_bin_47_traceur_45_runtime_46_js__ = require("/home/blake/development/generator-trees/node_modules/grunt-traceur/node_modules/traceur/bin/traceur-runtime.js"), $___47_home_47_blake_47_development_47_generator_45_trees_47_node_95_modules_47_grunt_45_traceur_47_node_95_modules_47_traceur_47_bin_47_traceur_45_runtime_46_js__ && $___47_home_47_blake_47_development_47_generator_45_trees_47_node_95_modules_47_grunt_45_traceur_47_node_95_modules_47_traceur_47_bin_47_traceur_45_runtime_46_js__.__esModule && $___47_home_47_blake_47_development_47_generator_45_trees_47_node_95_modules_47_grunt_45_traceur_47_node_95_modules_47_traceur_47_bin_47_traceur_45_runtime_46_js__ || {default: $___47_home_47_blake_47_development_47_generator_45_trees_47_node_95_modules_47_grunt_45_traceur_47_node_95_modules_47_traceur_47_bin_47_traceur_45_runtime_46_js__});
-module.exports = {
-  transform: transform,
-  map: transform,
-  each: each,
-  toGenerator: toGenerator,
-  toArray: toArray,
-  loop: loop,
-  interleave: interleave,
-  repeat: repeat,
-  repeatG: repeatG
-};
-function* loop(g) {
-  var q = [],
-      next = 0;
-  var result;
-  while (true) {
-    var result = g.next();
-    if (!result.done) {
-      q.push(result.value);
-      yield result.value;
-    } else
-      break;
-  }
-  while (true) {
-    var result = g.next();
-    if (!result.done) {
-      q.push(result.value);
-      yield result.value;
-    } else {
-      var value = q[next];
-      yield value;
-      next = (next + 1) % q.length;
-    }
-  }
-}
-function* interleave(generators) {
-  var q = toArray(generators),
-      next = 0;
-  while (q.length > 0) {
-    next = next % q.length;
-    var generator = q[next],
-        result = generator.next();
-    if (result.done) {
-      remove(generator);
-      if (q.length == 0)
-        return result.value;
-    }
-    next = next + 1;
-    yield result.value;
-  }
-  function remove(obj) {
-    var index = q.indexOf(obj);
-    if (index != -1) {
-      q.splice(index, 1);
-      if (next >= index) {
-        next = next == 0 ? q.length - 1 : next - 1;
-      }
-    } else
-      throw Error('Tried to remove object that is not in q', obj, q);
-  }
-}
-function mapGenerator(g, fn) {
-  var mapped = [];
-  while (true) {
-    var result = g.next();
-    mapped.push(fn(result.value));
-    if (result.done)
-      return mapped;
-  }
-}
-function each(g, fn) {
-  while (true) {
-    var result = g.next();
-    fn(result.value);
-    if (result.done)
-      return;
-  }
-}
-function* transform(generator, fn) {
-  while (true) {
-    var result = generator.next();
-    newValue = fn(result.value);
-    if (result.done)
-      return newValue;
-    else
-      yield newValue;
-  }
-}
-function* repeatG(generator, count) {
-  var values = [];
-  yield function*() {
-    while (true) {
-      var result = generator.next();
-      console.log('got result', result);
-      values.push(result.value);
-      if (result.done)
-        return result.value;
-      else
-        yield result.value;
-    }
-  };
-  for (var i = 0; i < count - 1; i++) {
-    yield function*() {
-      for (var v = 0; v < values.length - 1; v++)
-        yield values[v];
-      return values[v];
-    };
-  }
-}
-function* repeat(item, count) {
-  if (count == 0)
-    throw new Error('why did you do that?');
-  for (var i = 0; i < count - 1; i++)
-    yield item;
-  return item;
-}
-function toArray(generator) {
-  var array = [];
-  while (true) {
-    var result = generator.next();
-    array.push(result.value);
-    if (result.done)
-      return array;
-  }
-}
-function* toGenerator(array) {
-  var length = array.length;
-  if (length == 0)
-    throw Error('What should we do here?');
-  var i = 0;
-  for (i; i < length - 1; i++)
-    yield array[i];
-  return array[i];
-}
+var g = require('../generators');
+describe('toArray', (function() {
+  it('should work with 1 value', (function() {
+    var generator = g.repeat(value, 1);
+    expect(g.toArray(generator)).toBe([1]);
+  }));
+}));
+describe('transform', (function() {
+  var value = 1;
+  it('should work with 1 value', (function() {
+    var generator = g.repeat(value, 1);
+    expect(g.toArray(transform(generator, (function(value) {
+      return value + 1;
+    })))).toBe([2]);
+  }));
+}));
 //# sourceMappingURL=generators.js.map

@@ -1,6 +1,6 @@
 {
   "name": "generator-trees",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "ES6 Generator Trees",
   "main": "dist/index.js",
   "scripts": {
@@ -14,5 +14,10 @@
     "grunt-traceur": "^0.2.9",
     "load-grunt-tasks": "^1.0.0",
     "traceur": "0.0.72"
+  },
+  "devDependencies": {
+    "jasmine": "^2.0.1",
+    "karma": "^0.12.24",
+    "karma-jasmine": "^0.1.5"
   }
 }

@@ -2414,20 +2414,21 @@ System.get("traceur-runtime@0.0.61/src/runtime/polyfills/polyfills" + '');
 var __moduleName = "src_tests/index";
 var $___47_home_47_blake_47_development_47_generator_45_trees_47_node_95_modules_47_grunt_45_traceur_47_node_95_modules_47_traceur_47_bin_47_traceur_45_runtime_46_js__;
 ($___47_home_47_blake_47_development_47_generator_45_trees_47_node_95_modules_47_grunt_45_traceur_47_node_95_modules_47_traceur_47_bin_47_traceur_45_runtime_46_js__ = require("/home/blake/development/generator-trees/node_modules/grunt-traceur/node_modules/traceur/bin/traceur-runtime.js"), $___47_home_47_blake_47_development_47_generator_45_trees_47_node_95_modules_47_grunt_45_traceur_47_node_95_modules_47_traceur_47_bin_47_traceur_45_runtime_46_js__ && $___47_home_47_blake_47_development_47_generator_45_trees_47_node_95_modules_47_grunt_45_traceur_47_node_95_modules_47_traceur_47_bin_47_traceur_45_runtime_46_js__.__esModule && $___47_home_47_blake_47_development_47_generator_45_trees_47_node_95_modules_47_grunt_45_traceur_47_node_95_modules_47_traceur_47_bin_47_traceur_45_runtime_46_js__ || {default: $___47_home_47_blake_47_development_47_generator_45_trees_47_node_95_modules_47_grunt_45_traceur_47_node_95_modules_47_traceur_47_bin_47_traceur_45_runtime_46_js__});
-var generators = require('../generatorTrees');
-var $__0 = generators,
+var generators = require('../index');
+var $__0 = generators.t,
     preorder = $__0.preorder,
     inorder = $__0.inorder,
     postorder = $__0.postorder,
     breadthFirst = $__0.breadthFirst,
-    loopUntilEmpty = $__0.loopUntilEmpty,
-    gMap = $__0.gMap,
-    gEach = $__0.gEach,
-    toGenerator = $__0.toGenerator,
-    toArray = $__0.toArray,
     makeNode = $__0.makeNode,
     toNode = $__0.toNode,
     asNode = $__0.asNode;
+var $__1 = generators.g,
+    interleave = $__1.interleave,
+    map = $__1.map,
+    each = $__1.each,
+    toGenerator = $__1.toGenerator,
+    toArray = $__1.toArray;
 function* test() {
   yield 1;
   yield 2;
@@ -2444,35 +2445,35 @@ var addition = (function() {
 });
 console.log(asNode(makeNode, 1, makeNode('+', [makeNode(3), makeNode(4)])));
 console.log('\npreorder addition');
-gEach(preorder(addition()), (function(value) {
+each(preorder(addition()), (function(value) {
   return console.log('log', value);
 }));
 console.log(toArray(preorder(addition())));
 console.log('\ninorder addition');
-gEach(inorder(addition()), (function(value) {
+each(inorder(addition()), (function(value) {
   return console.log('log', value);
 }));
 console.log(toArray(inorder(addition())));
 console.log('\npostorder addition');
-gEach(postorder(addition()), (function(value) {
+each(postorder(addition()), (function(value) {
   return console.log('log', value);
 }));
 console.log(toArray(postorder(addition())));
 console.log('\nbreadthFirst addition');
-gEach(breadthFirst(addition()), (function(value) {
+each(breadthFirst(addition()), (function(value) {
   return console.log('log', value);
 }));
 console.log(toArray(breadthFirst(addition())));
 console.log('\ndepthFirst addition2');
 var addition2 = toGenerator(['+', toGenerator([1]), toGenerator([2])]);
-gMap(inorder(addition2), (function(value) {
+each(inorder(addition2), (function(value) {
   return console.log('log', value);
 }));
 var treeNode = (function() {
   return makeNode('root', [makeNode('+', [makeNode(1), makeNode(2)]), makeNode('names', [makeNode('five', [makeNode(5)]), makeNode('six', [makeNode(6)])])]);
 });
 console.log('\ntreeNode');
-gMap(inorder(treeNode()), (function(value) {
+map(inorder(treeNode()), (function(value) {
   return console.log('tr', value);
 }));
 function testTree(name, tree) {
@@ -2569,7 +2570,7 @@ function* clusterMachineGenerator(machineCount, prefix) {
   }
 }
 function* generator2() {
-  var loop = generators.loopUntilEmpty(toGenerator(q)),
+  var loop = interleave(toGenerator(q)),
       queue = loop.next().value;
   var generatorResult;
   do {
@@ -2587,7 +2588,7 @@ function* generator2() {
   } while (!generatorResult.done);
 }
 function* generator3() {
-  var loop = generators.loopUntilEmpty(toGenerator(q)),
+  var loop = interleave(toGenerator(q)),
       queue = loop.next().value;
   var generatorResult;
   do {
@@ -2604,7 +2605,7 @@ function* generator3() {
     }
   } while (!generatorResult.done);
 }
-var gen = generators.loopUntilEmpty(toGenerator(q));
+var gen = interleave(toGenerator(q));
 var i = 0;
 while (true) {
   var result = gen.next();

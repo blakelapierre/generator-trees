@@ -1,3 +1,4 @@
+var {toArray, toGenerator} = require('./generators');
 
 
 module.exports = {
@@ -5,95 +6,11 @@ module.exports = {
   inorder,
   postorder,
   breadthFirst,
-  gMap,
-  gEach,
-  toGenerator,
-  toArray,
-  loop,
-  loopUntilEmpty,
   makeNode,
   toNode,
   asNode
 };
 
-function* loop(g) {
-  var q = [],
-      next = 0;
-
-  var result;
-  while(true) {
-    var result = g.next();
-    if (!result.done) {
-      q.push(result.value);
-      yield result.value;
-    }
-    else break;
-  }
-
-  while (true) {
-    var result = g.next();
-    if (!result.done) {
-      q.push(result.value);
-      yield result.value;
-    }
-    else {
-      var value = q[next];
-      yield value;
-      next = (next + 1) % q.length;
-    }
-  }
-}
-
-// A generator that loops through a generator of generators in round-robin fashion,
-// yielding the next value from each generator
-// until all values have been generated
-function* loopUntilEmpty(generator) {
-  var q = toArray(generator),
-      next = 0;
-console.log('queue', q);
-  while (q.length > 0) {
-    next = next % q.length;
-    var generator = q[next],
-        result = generator.next();
-
-    if (result.done) {
-      remove(generator);
-      if (q.length == 0) return result.value;
-    }
-
-    next = next + 1;
-
-    yield result.value;
-  }
-
-  function remove(obj) {
-    var index = q.indexOf(obj);
-    if (index != -1) {
-      q.splice(index, 1);
-      if (next >= index) {
-        next = next == 0 ? q.length - 1 : next - 1;
-      }
-    }
-    else throw Error('Tried to remove object that is not in q', obj, q);
-  }
-}
-
-function gMap(g, fn) {
-  var mapped = [];
-  while (true) {
-    var result = g.next();
-    mapped.push(fn(result.value));
-    if (result.done) return mapped;
-  }
-}
-
-function gEach(g, fn) {
-  while (true) {
-    var result = g.next();
-    fn(result.value);
-    if (result.done) return;
-  }
-}
 
 
 //   R
@@ -253,16 +170,6 @@ function* breadthFirst(node, indent) {
   }
 }
 
-function* transform(generator, fn) {
-  while (true) {
-    var result = generator.next();
-        newValue = fn(result.value);
-
-    if (result.done) return newValue;
-    else yield (fn(result.value));
-  }
-}
-
 function* makeNode(value, children) {
   if (children) {
     yield value;
@@ -277,49 +184,6 @@ function* makeNode(value, children) {
     }
   }
   else return value;
-}
-
-// There are multiple ways to implement this function...
-function* repeat(generator, count) {
-  var values = [];
-
-  yield function* () {
-    while(true) {
-      var result = generator.next();
-      console.log('got result', result);
-      values.push(result.value);
-
-      if (result.done) return result.value;
-      else yield result.value;
-    }
-  };
-
-  for (var i = 0; i < count - 1; i++) {
-    yield function* () {
-      for (var v = 0; v < values.length - 1; v++) yield values[v];
-      return values[v];
-    };
-  }
-}
-
-function toArray(generator) {
-  var array = [];
-
-  while (true) {
-    var result = generator.next();
-    array.push(result.value);
-    if (result.done) return array;
-  }
-}
-
-function* toGenerator(array) {
-  var length = array.length;
-
-  if (length == 0) throw Error('What should we do here?');
-
-  var i = 0;
-  for (i; i < length - 1; i++) yield array[i];
-  return array[i];
 }
 
 function toNode(generator) {
