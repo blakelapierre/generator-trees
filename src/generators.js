@@ -7,7 +7,8 @@ module.exports = {
   loop,
   interleave,
   repeat,
-  repeatG
+  repeatG,
+  integers
 };
 
 function* loop(g) {
@@ -148,4 +149,9 @@ function* toGenerator(array) {
   var i = 0;
   for (i; i < length - 1; i++) yield array[i];
   return array[i];
+}
+
+function* integers(start) {
+  var i = start || 0;
+  while (true) yield i++;
 }

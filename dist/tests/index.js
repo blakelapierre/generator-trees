@@ -2422,13 +2422,17 @@ var $__0 = generators.t,
     breadthFirst = $__0.breadthFirst,
     makeNode = $__0.makeNode,
     toNode = $__0.toNode,
-    asNode = $__0.asNode;
+    asNode = $__0.asNode,
+    allBinaryTrees = $__0.allBinaryTrees,
+    printTree = $__0.printTree;
 var $__1 = generators.g,
+    transform = $__1.transform,
     interleave = $__1.interleave,
     map = $__1.map,
     each = $__1.each,
     toGenerator = $__1.toGenerator,
-    toArray = $__1.toArray;
+    toArray = $__1.toArray,
+    integers = $__1.integers;
 function* test() {
   yield 1;
   yield 2;
@@ -2613,4 +2617,16 @@ while (true) {
   if (result.done)
     break;
 }
+var size = 5,
+    binaryTrees = allBinaryTrees(size, integers);
+var i = 0;
+while (true) {
+  var result = binaryTrees.next();
+  console.log('tree', i++, result);
+  console.log(toArray(preorder(result.value)));
+  if (result.done)
+    break;
+}
+console.log('produced', i, 'binary trees of size', size);
+console.log(typeof integers);
 //# sourceMappingURL=index.js.map

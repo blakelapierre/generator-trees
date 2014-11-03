@@ -2424,12 +2424,15 @@ module.exports = {
   breadthFirst: breadthFirst,
   makeNode: makeNode,
   toNode: toNode,
-  asNode: asNode
+  asNode: asNode,
+  allBinaryTrees: allBinaryTrees,
+  printTree: printTree
 };
 function* preorder(node) {
   if (!node) {
-    throw Error('inorder, no node!');
+    throw Error('preorder, no node!');
   }
+  console.log('preorder', node);
   var result = node.next(),
       value = result.value;
   if (result.done)
@@ -2452,7 +2455,7 @@ function* preorder(node) {
 }
 function* inorder(node) {
   if (!node) {
-    console.log('undefined!');
+    console.log('inorder, no node!');
   }
   var valueResult = node.next(),
       value = valueResult.value;
@@ -2484,7 +2487,7 @@ function* inorder(node) {
 }
 function* postorder(node) {
   if (!node) {
-    console.log('undefined!');
+    console.log('postorder, no node!');
   }
   var valueResult = node.next(),
       value = valueResult.value;
@@ -2506,7 +2509,7 @@ function* postorder(node) {
 function* breadthFirst(node, indent) {
   indent = indent || '';
   if (!node) {
-    console.log('node was undefined', node);
+    console.log('breadthFirst, no node', node);
   }
   var valueResult = node.next(),
       value = valueResult.value;
@@ -2552,6 +2555,11 @@ function* makeNode(value, children) {
   } else
     return value;
 }
+function makeFnNode(value, children) {
+  return (function() {
+    return makeNode(value, children);
+  });
+}
 function toNode(generator) {
   var ret = {};
   var result = generator.next();
@@ -2572,6 +2580,130 @@ function printGenerator(generator) {
     console.log('print', result.value);
     if (result.done)
       break;
+  }
+}
+function* allBinaryTrees(size, valueGenerator) {
+  if (size == 0)
+    return makeNode(undefined);
+  var i = 0;
+  for (i; i < size - 1; i++) {
+    for (var j = 0; j < size - i - 1; j++) {
+      yield constructTree(i, j, valueGenerator, 0);
+    }
+  }
+  function* constructTree(leftSize, rightSize, valueGenerator, seed) {
+    var value = valueGenerator(seed).next().value;
+  }
+}
+function* allBinaryTrees(size, valueGenerator, seed) {
+  if (size == 0)
+    return makeFnNode(undefined);
+  var nodeValue = valueGenerator(seed).next().value;
+  if (size == 1)
+    return makeFnNode(nodeValue);
+  var i = 0;
+  for (i; i < size - 1; i++) {
+    var left = allBinaryTrees(i, valueGenerator, nodeValue + 1);
+    while (true) {
+      var j = size - 1 - i,
+          right = allBinaryTrees(j, valueGenerator, nodeValue + 1),
+          leftResult = left.next(),
+          createLeft = leftResult.value;
+      while (true) {
+        var rightResult = right.next(),
+            createRight = rightResult.value;
+        yield makeFnNode(nodeValue, [createLeft, createRight]);
+        if (rightResult.done)
+          break;
+      }
+      if (leftResult.done)
+        break;
+    }
+  }
+  var left = allBinaryTrees(i, valueGenerator, nodeValue + 1);
+  while (true) {
+    var leftResult = left.next();
+    if (leftResult.done)
+      return makeFnNode(nodeValue, [leftResult.value, makeFnNode(undefined)]);
+    yield makeFnNode(nodeValue, [leftResult.value, makeFnNode(undefined)]);
+  }
+}
+function* allTrees(size, maxChildren, parent, nodeValueGenerator) {
+  console.log('all', size);
+  if (size == 0)
+    return makeNode(undefined);
+  nodeValue = nodeValueGenerator.next().value;
+  if (size == 1)
+    return makeNode(nodeValue);
+  yield makeNode(nodeValue);
+  var i = 0;
+  for (i; i < size - 1; i++) {
+    console.log('i', i);
+    var left = allBinaryTrees(i, nodeValueGenerator);
+    console.log('left', left);
+    while (true) {
+      var leftResult = left.next(),
+          j = size - 1 - i,
+          right = allBinaryTrees(j, nodeValueGenerator);
+      console.log('leftResult', leftResult);
+      console.log('right', right);
+      while (true) {
+        var rightResult = right.next(),
+            children = [];
+        console.log('rightResult', rightResult);
+        console.log('children', children);
+        console.log('nodeValue', nodeValue);
+        var childValue = nodeValueGenerator.next().value;
+        yield makeNode(childValue, [leftResult.value, rightResult.value]);
+        if (rightResult.done)
+          break;
+      }
+      if (leftResult.done)
+        break;
+    }
+  }
+  var left = allBinaryTrees(i, nodeValueGenerator),
+      j = 0;
+  while (true) {
+    var leftResult = left.next();
+    console.log('last leftResult', leftResult);
+    nodeValue = nodeValueGenerator.next().value;
+    if (leftResult.done)
+      return makeNode(nodeValue, [leftResult.value, makeNode(undefined)]);
+    yield makeNode(nodeValue, [leftResult.value, makeNode(undefined)]);
+    j++;
+  }
+}
+function printTree(tree, level) {
+  level = level || 0;
+  if (tree == undefined)
+    return print('<undefined>');
+  var node = tree(),
+      valueResult = node.next(),
+      nodeValue = valueResult.value;
+  if (nodeValue == undefined)
+    return;
+  if (valueResult.done)
+    return print(nodeValue);
+  printChild(node);
+  print(nodeValue);
+  printChild(node);
+  function print(value) {
+    console.log(indent(level) + value);
+  }
+  function printChild(tree) {
+    var childResult = tree.next(),
+        childValue = childResult.value;
+    if (childValue != undefined)
+      printTree(childValue, level + 1);
+    return !childResult.done;
+  }
+  function indent(count, character) {
+    character = character || ' ';
+    var s = '';
+    for (var i = 0; i < count; i++)
+      s += character;
+    return s;
   }
 }
 //# sourceMappingURL=trees.js.map

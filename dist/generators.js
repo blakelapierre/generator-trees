@@ -2423,7 +2423,8 @@ module.exports = {
   loop: loop,
   interleave: interleave,
   repeat: repeat,
-  repeatG: repeatG
+  repeatG: repeatG,
+  integers: integers
 };
 function* loop(g) {
   var q = [],
@@ -2547,5 +2548,10 @@ function* toGenerator(array) {
   for (i; i < length - 1; i++)
     yield array[i];
   return array[i];
+}
+function* integers(start) {
+  var i = start || 0;
+  while (true)
+    yield i++;
 }
 //# sourceMappingURL=generators.js.map

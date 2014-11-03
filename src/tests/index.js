@@ -1,7 +1,7 @@
 var generators = require('../index');
 
-var {preorder, inorder, postorder, breadthFirst, makeNode, toNode, asNode} = generators.t;
-var {interleave, map, each, toGenerator, toArray} = generators.g;
+var {preorder, inorder, postorder, breadthFirst, makeNode, toNode, asNode, allBinaryTrees, printTree} = generators.t;
+var {transform, interleave, map, each, toGenerator, toArray, integers} = generators.g;
 
 function* test() {
   yield 1;
@@ -338,3 +338,19 @@ while (true) {
   console.log(i++, result);
   if (result.done) break;
 }
+
+var size = 5,
+    binaryTrees = allBinaryTrees(size, integers);
+
+var i = 0;
+while (true) {
+  var result = binaryTrees.next();
+
+  console.log('tree', i++, result);
+  console.log(toArray(preorder(result.value)));
+  //printTree(result.value);
+
+  if (result.done) break;
+}
+console.log('produced', i, 'binary trees of size', size);
+console.log(typeof integers);

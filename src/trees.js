@@ -8,7 +8,9 @@ module.exports = {
   breadthFirst,
   makeNode,
   toNode,
-  asNode
+  asNode,
+  allBinaryTrees,
+  printTree
 };
 
 
@@ -20,9 +22,10 @@ module.exports = {
 // : [R, A, B]
 function* preorder(node) {
   if (!node) {
-    throw Error('inorder, no node!');
+    //return undefined;
+    throw Error('preorder, no node!');
   }
-
+console.log('preorder', node);
   var result = node.next(),
       value = result.value;
 
@@ -56,7 +59,7 @@ function* preorder(node) {
 // : [A, R, B]
 function* inorder(node) {
   if (!node) {
-    console.log('undefined!');
+    console.log('inorder, no node!');
   }
 
   var valueResult = node.next(),
@@ -99,7 +102,7 @@ function* inorder(node) {
 // : [A, B, R]
 function* postorder(node) {
     if (!node) {
-    console.log('undefined!');
+    console.log('postorder, no node!');
   }
 
   var valueResult = node.next(),
@@ -135,7 +138,7 @@ function* postorder(node) {
 function* breadthFirst(node, indent) {
   indent = indent || '';
   if (!node) {
-    console.log('node was undefined', node);
+    console.log('breadthFirst, no node', node);
   }
 
   var valueResult = node.next(),
@@ -186,6 +189,10 @@ function* makeNode(value, children) {
   else return value;
 }
 
+function makeFnNode(value, children) {
+  return () => makeNode(value, children);
+}
+
 function toNode(generator) {
   var ret = {};
 
@@ -209,4 +216,180 @@ function printGenerator(generator) {
   }
 }
 
+function* allBinaryTrees(size, valueGenerator) {
+  if (size == 0) return makeNode(undefined);
+
+  // foreach (tree in trees) {
+  //   yield tree;
+  // }
+
+  var i = 0;
+  for (i; i < size - 1; i++) {
+    for (var j = 0; j < size - i - 1; j++) {
+      yield constructTree(i, j, valueGenerator, 0);
+    }
+  }
+
+
+  function* constructTree(leftSize, rightSize, valueGenerator, seed) {
+    var value = valueGenerator(seed).next().value;
+  }
+}
+
+// static IEnumerable<Node> AllBinaryTrees(int size)
+// {
+//     if (size == 0)
+//         return new Node[] { null };
+//     return from i in Enumerable.Range(0, size)
+//            from left in AllBinaryTrees(i)
+//            from right in AllBinaryTrees(size - 1 - i)
+//            select new Node(left, right);
+// }
+
+
+function* allBinaryTrees(size, valueGenerator, seed) {
+  if (size == 0) return makeFnNode(undefined);
+
+  var nodeValue = valueGenerator(seed).next().value;
+
+  if (size == 1) return makeFnNode(nodeValue);
+
+  var i = 0;
+  for (i; i < size - 1; i++) {
+    var left = allBinaryTrees(i, valueGenerator, nodeValue + 1);
+
+    while (true) {
+      var j = size - 1 - i,
+          right = allBinaryTrees(j, valueGenerator, nodeValue + 1),
+          leftResult = left.next(),
+          createLeft = leftResult.value;
+
+      while (true) {
+        var rightResult = right.next(),
+            createRight = rightResult.value;
+
+        yield makeFnNode(nodeValue, [createLeft, createRight]);
+
+        if (rightResult.done) break;
+      }
+      if (leftResult.done) break;
+    }
+  }
+
+  var left = allBinaryTrees(i, valueGenerator, nodeValue + 1);
+  while (true) {
+    var leftResult = left.next();
+
+    if (leftResult.done) return makeFnNode(nodeValue, [leftResult.value, makeFnNode(undefined)]);
+    yield makeFnNode(nodeValue, [leftResult.value, makeFnNode(undefined)]);
+  }
+}
+
+function* allTrees(size, maxChildren, parent, nodeValueGenerator) {
+  console.log('all', size);
+  if (size == 0) return makeNode(undefined);
+
+  nodeValue = nodeValueGenerator.next().value;
+
+  if (size == 1) return makeNode(nodeValue);
+
+  yield makeNode(nodeValue);
+
+  var i = 0;
+  for (i; i < size - 1; i++) {
+    console.log('i', i);
+    var left = allBinaryTrees(i, nodeValueGenerator);
+    console.log('left', left);
+    while (true) {
+      var leftResult = left.next(),
+          j = size - 1 - i,
+          right = allBinaryTrees(j, nodeValueGenerator);
+
+      console.log('leftResult', leftResult);
+      console.log('right', right);
+
+      while (true) {
+        var rightResult = right.next(),
+            children = [];
+
+        console.log('rightResult', rightResult);
+
+        // if (i != 0) children.push(leftResult.value);
+        // if (j != 0) children.push(rightResult.value);
+        // if (!(leftResult.done && leftResult.value == undefined)) children.push(leftResult.value);
+        // if (!(rightResult.done && rightResult.value == undefined)) children.push(rightResult.value);
+
+        console.log('children', children);
+        console.log('nodeValue', nodeValue);
+
+        var childValue = nodeValueGenerator.next().value;
+        // yield makeNode(nodeValue, children.length > 0 ? children : undefined);
+        yield makeNode(childValue, [leftResult.value, rightResult.value]);
+
+        if (rightResult.done) break;
+      }
+      if (leftResult.done) break;
+    }
+  }
+
+  var left = allBinaryTrees(i, nodeValueGenerator),
+      j = 0;
+  while (true) {
+    var leftResult = left.next();
+
+    console.log('last leftResult', leftResult);
+
+    nodeValue = nodeValueGenerator.next().value;
+    if (leftResult.done) return makeNode(nodeValue, [leftResult.value, makeNode(undefined)]);
+    yield makeNode(nodeValue, [leftResult.value, makeNode(undefined)]);
+    j++;
+  }
+}
+
+function printTree(tree, level) {
+  level = level || 0;
+
+  if (tree == undefined) return print('<undefined>');
+
+  var node = tree(),
+      valueResult = node.next(),
+      nodeValue = valueResult.value;
+
+  if (nodeValue == undefined) return;
+  if (valueResult.done) return print(nodeValue);
+
+  printChild(node);
+  print(nodeValue);
+  printChild(node);
+
+  function print(value) {
+    console.log(indent(level) + value);
+  }
+
+  function printChild(tree) {
+    var childResult = tree.next(),
+        childValue = childResult.value;
+
+    if (childValue != undefined) printTree(childValue, level + 1);
+
+    return !childResult.done;
+  }
+
+  function indent(count, character) {
+    character = character || ' ';
+    var s = '';
+    for (var i = 0; i < count; i++) s += character;
+    return s;
+  }
+}
+
 // Implementing and Traversing Trees Using Generators in JavaScript [ECMAScript 6]
+
+
+//   f
+//  b
+//   e
+// r
+//   d
+//  a
+//   c
