@@ -2623,7 +2623,7 @@ var i = 0;
 while (true) {
   var result = binaryTrees.next();
   console.log('tree', i++, result);
-  console.log(toArray(preorder(result.value)));
+  printTree(result.value);
   if (result.done)
     break;
 }
