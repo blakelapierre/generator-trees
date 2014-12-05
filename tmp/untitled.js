@@ -1,57 +1,6 @@
-var generators = require('../index');
+var generators = require('../util/generators');
 
-var {preorder, inorder, postorder, breadthFirst, reduce, makeNode, toNode, asNode, allBinaryTrees, printTree} = generators.t;
-var {transform, interleave, map, each, toGenerator, toArray, integers, zip} = generators.g;
-
-
-function* reduceTest() {
-  console.log('yielding 1');
-  yield 1;
-  yield makeNode(2);
-  yield function* () {
-    return 3;
-  };
-  yield function* () {
-    return 4;
-  };
-  return function* () {
-    yield 5;
-    yield function*() {
-      return 6;
-    };
-    return function*() {
-      return 7;
-    };
-  }
-}
-
-var reduceTest = () => makeNode(1, [makeNode(2, [makeNode(3)]), makeNode(4), makeNode(5, [makeNode(6), makeNode(7)])]);
-
-console.log(reduce(reduceTest(), (x, y) => {
-  console.log('reduce', x, y);
-  return x + y;
-}, () => { return 0; }));
-
-console.log(reduce(reduceTest(), (x, y) => {
-  console.log('reduce', x, y);
-  return x + y;
-}, (x, y) => {
-  console.log('collapse', x, y);
-  return x * y;
-}, () => { return 0; }));
-
-console.log(reduce(reduceTest(), (x, y) => {
-  console.log('reduce', x, y);
-  x[y.toString()] = y;
-  return x;
-}, (x, y) => {
-  console.log('collapse', x, y);
-  y[x.toString()] = x;
-  return y;
-}, () => { return {}; }));
-
-console.log('done');
-
+var {preorder, inorder, postorder, breadthFirst, gMap, gEach, toGenerator, toArray, makeNode, toNode, asNode} = generators;
 
 function* test() {
   yield 1;
@@ -88,24 +37,24 @@ var addition = () => {
 console.log(asNode(makeNode, 1, makeNode('+', [makeNode(3), makeNode(4)])));
 
 console.log('\npreorder addition');
-each(preorder(addition()), value => console.log('log', value));
+gEach(preorder(addition()), value => console.log('log', value));
 console.log(toArray(preorder(addition())));
 
 console.log('\ninorder addition');
-each(inorder(addition()), value => console.log('log', value));
+gEach(inorder(addition()), value => console.log('log', value));
 console.log(toArray(inorder(addition())));
 
 console.log('\npostorder addition');
-each(postorder(addition()), value => console.log('log', value));
+gEach(postorder(addition()), value => console.log('log', value));
 console.log(toArray(postorder(addition())));
 
 console.log('\nbreadthFirst addition');
-each(breadthFirst(addition()), value => console.log('log', value));
+gEach(breadthFirst(addition()), value => console.log('log', value));
 console.log(toArray(breadthFirst(addition())));
 
 console.log('\ndepthFirst addition2');
 var addition2 = toGenerator(['+', toGenerator([1]), toGenerator([2])]);
-each(inorder(addition2), value => console.log('log', value));
+gMap(inorder(addition2), value => console.log('log', value));
 
 var treeNode = () => {
   return makeNode('root', [
@@ -118,46 +67,24 @@ var treeNode = () => {
 };
 
 console.log('\ntreeNode');
-map(inorder(treeNode()), value => console.log('tr', value));
+print(inorder(treeNode()));
+gMap(inorder(treeNode()), value => console.log('tr', value));
 
 
-function testTree(name, tree) {
-  console.log('\n', name);
+// var basicTree = {
+//   'root': {
+//     'one': 1
+//   }
+// };
 
-  console.log(name, 'preorder', toArray(preorder(parseAsNode(tree))));
-  console.log(name, 'inorder', toArray(inorder(parseAsNode(tree))));
-  console.log(name, 'postorder', toArray(postorder(parseAsNode(tree))));
-  console.log(name, 'breadthFirst', toArray(breadthFirst(parseAsNode(tree))));
-}
+// console.log('\nbasic tree');
 
+// var basicTreeNode = toNode(basicTree, '@');
 
-var basicTree = {
-  'root': {
-    'one': 1
-  }
-};
-
-testTree('basic tree', basicTree);
-
-var binaryTree = {
-  'root': {
-    'one': 1,
-    'two': 2
-  }
-};
-
-testTree('binary tree', binaryTree);
-
-var simpleTree = {
-  'root': {
-    'level1': {
-      'level2': 2,
-      'wut': 'this'
-    }
-  }
-};
-
-testTree('simple tree', simpleTree);
+// console.log(basicTreeNode.next());
+// console.log(basicTreeNode.next());
+// console.log(basicTreeNode.next());
+// console.log(basicTreeNode.next());
 
 
 var tree = {
@@ -175,8 +102,6 @@ var tree = {
   }
 };
 
-testTree('tree', tree);
-
 // Children are ordered
 var tree2 = {
   'root': [
@@ -186,9 +111,7 @@ var tree2 = {
   ]
 };
 
-testTree('tree2', tree2);
-
-var tree3 = {
+var tree2 = {
   'root': [
     {'+': [
       1,
@@ -205,9 +128,7 @@ var tree3 = {
       {'six': 6}]}]
 };
 
-testTree('tree3', tree3);
-
-var tree4 = {
+var tree2 = {
   'root': [
     {'+': [
       1,
@@ -230,25 +151,29 @@ var tree4 = {
   ]
 };
 
-testTree('tree4', tree4);
 
+console.log('\ntree');
+console.log(toNode(tree));
 
-// gMap(parseAsNode(tree), value => console.log('tree', value));
+var treeNode = toNode(tree, 'root');
 
-// gMap(parseAsNode(tree), value => {
-//   if (value && value.next && typeof value.next == 'function') {
-//     gMap(value, v => console.log('v', v));
-//   }
-//   console.log('va', value);
-// });
+console.log(treeNode.next());
+console.log(treeNode.next());
 
-// console.log('\ndepthFirst');
-// console.log(toArray(inorder(parseAsNode(tree))));
+gMap(toNode(tree), value => console.log('tree', value));
 
-// console.log('\nbreadthFirst');
-// //print(breadthFirst(parseAsNode(tree)));
-// console.log(toArray(breadthFirst(parseAsNode(tree))));
-// //console.log(toArray(breadthFirst(parseAsNode(tree2))));
+gMap(toNode(tree), value => {
+  if (value && value.next && typeof value.next == 'function') {
+    gMap(value, v => console.log('v', v));
+  }
+  console.log('va', value);
+});
+
+console.log('\ndepthFirst');
+print(inorder(toNode(tree)));
+
+console.log('\nbreadthFirst');
+print(breadthFirst(toNode(tree)));
 
 function print(generator, prefix) {
   prefix = prefix || 'print';
@@ -256,15 +181,12 @@ function print(generator, prefix) {
 }
 
 
-function* parseAsNode(obj, value) {
-
+function* toNode(obj, value) {
   value = value || '@@root';
 
   var generator = makeNode(value, () => childrenFunction(obj));
-
   while (true) {
     var result = generator.next();
-
     if (result.done) return result.value;
     else yield result.value;
   }
@@ -283,7 +205,7 @@ function* parseAsNode(obj, value) {
         var key = keys[i];
         var childValue = obj[key];
 
-        yield makeNode(key, (childValue => () => childrenFunction(childValue))(childValue));
+        yield makeNode(key, () => childrenFunction(childValue));
 
         // There should be a call to makeNode in here somehweret
         // var generator = toNode(childValue, key);
@@ -334,18 +256,15 @@ var q = [
 
 function* clusterMachineGenerator(machineCount, prefix) {
   prefix = prefix || '';
-  var i;
-  for (i = 0; i < machineCount - 1; i++) yield generateMachine(i);
-
-  return generateMachine(i);
+  for (var i = 0; i < machineCount; i++) yield generateMachine(i);
 
   function generateMachine(number) {
-    return { id: prefix + number.toString() };
+    return { id: prefix + i.toString() };
   }
 }
 
 function* generator2() {
-  var loop = interleave(toGenerator(q)),
+  var loop = generators.loopUntilEmpty(q),
       queue = loop.next().value;
   var generatorResult;
   do {
@@ -362,54 +281,13 @@ function* generator2() {
   } while (!generatorResult.done);
 }
 
-function* generator3() {
-  var loop = interleave(toGenerator(q)),
-      queue = loop.next().value;
-  var generatorResult;
-  do {
-    generatorResult = loop.next();
+var gen = generator2();
 
-    if (generatorResult.done) return;
-    else {
-      var machineGenerator = generatorResult.value,
-          machineResult = machineGenerator.next();
-
-      if (machineResult.done) queue.remove(machineGenerator);
-      else yield machineResult.value;
-    }
-  } while (!generatorResult.done);
-}
-
-var gen = interleave(toGenerator(q));
-
-var i = 0;
-while (true) {
-  var result = gen.next();
-  console.log(i++, result);
-  if (result.done) break;
-}
-
-var size = 5,
-    binaryTrees = allBinaryTrees(size, integers);
-
-var i = 0;
-while (true) {
-  var result = binaryTrees.next();
-
-  console.log('tree', i++, result);
-  // console.log(toArray(preorder(result.value)));
-  printTree(result.value);
-
-  if (result.done) break;
-}
-console.log('produced', i, 'binary trees of size', size);
-console.log(typeof integers);
-
-var generators = toGenerator([
-  toGenerator([1, 2, 3]),
-  toGenerator([4, undefined, 6]),
-  toGenerator([7]),
-  toGenerator([8, 9, 10, 11])
-]);
-
-console.log('zip', toArray(zip(generators)));
+var i = 0,
+    result;
+do {
+  // if (i == 21) q.remove(0);
+  // if (i == 30) q.add(1, clusterMachineGenerator(4));
+  result = gen.next();
+  if (!result.done) console.log(i++, result.value);
+} while (!result.done);

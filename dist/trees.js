@@ -2422,6 +2422,7 @@ module.exports = {
   inorder: inorder,
   postorder: postorder,
   breadthFirst: breadthFirst,
+  reduce: reduce,
   makeNode: makeNode,
   toNode: toNode,
   asNode: asNode,
@@ -2451,6 +2452,36 @@ function* preorder(node) {
       } else
         yield childGeneratorResult.value;
     }
+  }
+}
+function reduce(node, reduceFn, collapseFn, unitValue) {
+  if (unitValue == undefined) {
+    unitValue = collapseFn;
+    collapseFn = reduceFn;
+  }
+  return reduceNode(node);
+  function reduceNode(node) {
+    console.log('reduceNode', node);
+    if (!node) {
+      console.log('reduceNode, no node!');
+    }
+    var valueResult = node.next(),
+        value = valueResult.value;
+    if (valueResult.done)
+      return collapseFn(value, unitValue());
+    return collapseFn(value, reduceChildren(node));
+  }
+  function reduceChildren(children) {
+    console.log('reduceChildren', children);
+    var reducedValue = unitValue();
+    while (true) {
+      var childResult = children.next(),
+          value = childResult.value;
+      reducedValue = reduceFn(reducedValue, reduceNode(value));
+      if (childResult.done)
+        break;
+    }
+    return reducedValue;
   }
 }
 function* inorder(node) {

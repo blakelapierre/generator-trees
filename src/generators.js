@@ -8,7 +8,8 @@ module.exports = {
   interleave,
   repeat,
   repeatG,
-  integers
+  integers,
+  zip
 };
 
 function* loop(g) {
@@ -74,6 +75,16 @@ function* interleave(generators) {
   }
 }
 
+
+function* threadValue(generators, value) {
+  while (true) {
+    var result = generators.next(),
+        generator = result.value;
+
+
+  }
+}
+
 function mapGenerator(g, fn) {
   var mapped = [];
   while (true) {
@@ -98,6 +109,31 @@ function* transform(generator, fn) {
 
     if (result.done) return newValue;
     else yield newValue;
+  }
+}
+
+function* zip(generators) {
+  var array = toArray(generators);
+
+  var remaining = array.length;
+  while (remaining > 0) {
+    var product = [];
+    for (var i = 0; i < array.length; i++) {
+      var generator = array[i],
+          result = generator != null ? generator.next() : undefined;
+
+      if (result) {
+        product.push(result.value);
+        if (result.done) {
+          delete array[i];
+          remaining--;
+        }
+      }
+      else product.push(undefined);
+    }
+
+    if (remaining == 0) return product;
+    yield product;
   }
 }
 

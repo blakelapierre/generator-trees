@@ -2430,4 +2430,8 @@ describe('transform', (function() {
     })))).toBe([2]);
   }));
 }));
+describe('zip', (function() {
+  var generators = g.toGenerator([g.toGenerator([1, 2, 3]), g.toGenerator([4, 5, 6])]);
+  expect(g.zip(generators)).toBe([[1, 4], [2, 5], [3, 6]]);
+}));
 //# sourceMappingURL=generators.js.map

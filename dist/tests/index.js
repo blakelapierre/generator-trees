@@ -2420,6 +2420,7 @@ var $__0 = generators.t,
     inorder = $__0.inorder,
     postorder = $__0.postorder,
     breadthFirst = $__0.breadthFirst,
+    reduce = $__0.reduce,
     makeNode = $__0.makeNode,
     toNode = $__0.toNode,
     asNode = $__0.asNode,
@@ -2432,7 +2433,58 @@ var $__1 = generators.g,
     each = $__1.each,
     toGenerator = $__1.toGenerator,
     toArray = $__1.toArray,
-    integers = $__1.integers;
+    integers = $__1.integers,
+    zip = $__1.zip;
+function* reduceTest() {
+  console.log('yielding 1');
+  yield 1;
+  yield makeNode(2);
+  yield function*() {
+    return 3;
+  };
+  yield function*() {
+    return 4;
+  };
+  return function*() {
+    yield 5;
+    yield function*() {
+      return 6;
+    };
+    return function*() {
+      return 7;
+    };
+  };
+}
+var reduceTest = (function() {
+  return makeNode(1, [makeNode(2, [makeNode(3)]), makeNode(4), makeNode(5, [makeNode(6), makeNode(7)])]);
+});
+console.log(reduce(reduceTest(), (function(x, y) {
+  console.log('reduce', x, y);
+  return x + y;
+}), (function() {
+  return 0;
+})));
+console.log(reduce(reduceTest(), (function(x, y) {
+  console.log('reduce', x, y);
+  return x + y;
+}), (function(x, y) {
+  console.log('collapse', x, y);
+  return x * y;
+}), (function() {
+  return 0;
+})));
+console.log(reduce(reduceTest(), (function(x, y) {
+  console.log('reduce', x, y);
+  x[y.toString()] = y;
+  return x;
+}), (function(x, y) {
+  console.log('collapse', x, y);
+  y[x.toString()] = x;
+  return y;
+}), (function() {
+  return {};
+})));
+console.log('done');
 function* test() {
   yield 1;
   yield 2;
@@ -2629,4 +2681,6 @@ while (true) {
 }
 console.log('produced', i, 'binary trees of size', size);
 console.log(typeof integers);
+var generators = toGenerator([toGenerator([1, 2, 3]), toGenerator([4, undefined, 6]), toGenerator([7]), toGenerator([8, 9, 10, 11])]);
+console.log('zip', toArray(zip(generators)));
 //# sourceMappingURL=index.js.map

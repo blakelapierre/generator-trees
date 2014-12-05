@@ -2424,7 +2424,8 @@ module.exports = {
   interleave: interleave,
   repeat: repeat,
   repeatG: repeatG,
-  integers: integers
+  integers: integers,
+  zip: zip
 };
 function* loop(g) {
   var q = [],
@@ -2476,6 +2477,12 @@ function* interleave(generators) {
       throw Error('Tried to remove object that is not in q', obj, q);
   }
 }
+function* threadValue(generators, value) {
+  while (true) {
+    var result = generators.next(),
+        generator = result.value;
+  }
+}
 function mapGenerator(g, fn) {
   var mapped = [];
   while (true) {
@@ -2501,6 +2508,28 @@ function* transform(generator, fn) {
       return newValue;
     else
       yield newValue;
+  }
+}
+function* zip(generators) {
+  var array = toArray(generators);
+  var remaining = array.length;
+  while (remaining > 0) {
+    var product = [];
+    for (var i = 0; i < array.length; i++) {
+      var generator = array[i],
+          result = generator != null ? generator.next() : undefined;
+      if (result) {
+        product.push(result.value);
+        if (result.done) {
+          delete array[i];
+          remaining--;
+        }
+      } else
+        product.push(undefined);
+    }
+    if (remaining == 0)
+      return product;
+    yield product;
   }
 }
 function* repeatG(generator, count) {

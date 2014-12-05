@@ -6,6 +6,7 @@ module.exports = {
   inorder,
   postorder,
   breadthFirst,
+  reduce,
   makeNode,
   toNode,
   asNode,
@@ -48,6 +49,77 @@ console.log('preorder', node);
       }
       else yield childGeneratorResult.value;
     }
+  }
+}
+
+function reduce(node, reduceFn, collapseFn, unitValue) {
+  if (unitValue == undefined) {
+    unitValue = collapseFn;
+    collapseFn = reduceFn;
+  }
+  // console.log('reduce', node);
+
+  // if (!node) {
+  //   console.log('reduce, no node!');
+  // }
+
+  // var valueResult = node.next(),
+  //     value = valueResult.value;
+
+  //     console.log(value);
+
+  // if (valueResult.done) return value;
+
+  // while (true) {
+  //   var child = node.next(),
+  //       reducedValue = unitValue;
+
+  //   var childGenerator = reduce(child.value, reduceFn, unitValue);
+  //   while (true) {
+  //     var childGeneratorResult = childGenerator.next(),
+  //         childValue = childGeneratorResult.value;
+
+  //     // should we be mutating?
+  //     // reduceFn(reducedValue, childValue);
+
+  //     reducedValue = reduceFn(reducedValue, childValue);
+
+  //     if (childGeneratorResult.done) break;
+  //   }
+
+  //   if (child.done) return reducedValue;
+
+  //   yield reducedValue;
+  // }
+
+  return reduceNode(node);
+
+  function reduceNode(node) {
+    console.log('reduceNode', node);
+    if (!node) {
+      console.log('reduceNode, no node!');
+    }
+
+    var valueResult = node.next(),
+        value = valueResult.value;
+
+    if (valueResult.done) return collapseFn(value, unitValue());
+
+    return collapseFn(value, reduceChildren(node));
+  }
+
+  function reduceChildren(children) {
+    console.log('reduceChildren', children);
+    var reducedValue = unitValue();
+    while (true) {
+      var childResult = children.next(),
+          value = childResult.value;
+
+      reducedValue = reduceFn(reducedValue, reduceNode(value));
+
+      if (childResult.done) break;
+    }
+    return reducedValue;
   }
 }
 
@@ -101,7 +173,7 @@ function* inorder(node) {
 //
 // : [A, B, R]
 function* postorder(node) {
-    if (!node) {
+  if (!node) {
     console.log('postorder, no node!');
   }
 
