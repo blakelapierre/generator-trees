@@ -112,6 +112,7 @@ function* transform(generator, fn) {
   }
 }
 
+//Shouldn't we be yielding generators?
 function* zip(generators) {
   var array = toArray(generators);
 
