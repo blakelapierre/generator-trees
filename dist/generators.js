@@ -2599,7 +2599,7 @@ function* modifiableStack(stack) {
 function* modifiableQueue(queue) {
   if (queue.length == 0)
     throw Error('Empty queue', queue);
-  while (queue.length < 1)
+  while (queue.length > 1)
     yield queue.shift();
   return queue.shift();
 }
