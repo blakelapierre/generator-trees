@@ -2418,6 +2418,7 @@ module.exports = {
   transform: transform,
   map: transform,
   each: each,
+  modifiableStack: modifiableStack,
   toGenerator: toGenerator,
   toArray: toArray,
   loop: loop,
@@ -2425,6 +2426,7 @@ module.exports = {
   repeat: repeat,
   repeatG: repeatG,
   integers: integers,
+  take: take,
   zip: zip
 };
 function* loop(g) {
@@ -2479,7 +2481,7 @@ function* interleave(generators) {
 }
 function* threadValue(generators, value) {
   while (true) {
-    var result = generators.next(),
+    var result = generators.next(value),
         generator = result.value;
   }
 }
@@ -2508,6 +2510,14 @@ function* transform(generator, fn) {
       return newValue;
     else
       yield newValue;
+  }
+}
+function* take(generator, count) {
+  while (true) {
+    var result = generator.next();
+    if (result.done || --count <= 0)
+      return result.value;
+    yield result.value;
   }
 }
 function* zip(generators) {
@@ -2577,6 +2587,13 @@ function* toGenerator(array) {
   for (i; i < length - 1; i++)
     yield array[i];
   return array[i];
+}
+function* modifiableStack(stack) {
+  if (stack.length == 0)
+    throw Error('Empty stack', stack);
+  while (stack.length > 1)
+    yield stack.pop();
+  return stack.pop();
 }
 function* integers(start) {
   var i = start || 0;

@@ -2,6 +2,7 @@ module.exports = {
   transform,
   map: transform,
   each: each,
+  modifiableStack,
   toGenerator,
   toArray,
   loop,
@@ -9,6 +10,7 @@ module.exports = {
   repeat,
   repeatG,
   integers,
+  take,
   zip
 };
 
@@ -78,9 +80,8 @@ function* interleave(generators) {
 
 function* threadValue(generators, value) {
   while (true) {
-    var result = generators.next(),
+    var result = generators.next(value),
         generator = result.value;
-
 
   }
 }
@@ -109,6 +110,14 @@ function* transform(generator, fn) {
 
     if (result.done) return newValue;
     else yield newValue;
+  }
+}
+
+function* take(generator, count) {
+  while (true) {
+    var result = generator.next();
+    if (result.done || --count <= 0) return result.value;
+    yield result.value;
   }
 }
 
@@ -186,6 +195,13 @@ function* toGenerator(array) {
   var i = 0;
   for (i; i < length - 1; i++) yield array[i];
   return array[i];
+}
+
+function* modifiableStack(stack) {
+  if (stack.length == 0) throw Error('Empty stack', stack);
+
+  while (stack.length > 1) yield stack.pop();
+  return stack.pop();
 }
 
 function* integers(start) {
