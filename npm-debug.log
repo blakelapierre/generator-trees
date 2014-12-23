@@ -1,0 +1,108 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/local/bin/node', '/usr/local/bin/npm', 'publish' ]
+2 info using npm@1.4.23
+3 info using node@v0.10.31
+4 verbose publish [ '.' ]
+5 verbose cache add [ '.', null ]
+6 verbose cache add name=undefined spec="." args=[".",null]
+7 verbose parsed url { protocol: null,
+7 verbose parsed url   slashes: null,
+7 verbose parsed url   auth: null,
+7 verbose parsed url   host: null,
+7 verbose parsed url   port: null,
+7 verbose parsed url   hostname: null,
+7 verbose parsed url   hash: null,
+7 verbose parsed url   search: null,
+7 verbose parsed url   query: null,
+7 verbose parsed url   pathname: '.',
+7 verbose parsed url   path: '.',
+7 verbose parsed url   href: '.' }
+8 silly lockFile 3a52ce78- .
+9 verbose lock . /home/blake/.npm/3a52ce78-.lock
+10 verbose tar pack [ '/home/blake/.npm/generator-trees/0.0.12/package.tgz', '.' ]
+11 verbose tarball /home/blake/.npm/generator-trees/0.0.12/package.tgz
+12 verbose folder .
+13 info prepublish generator-trees@0.0.12
+14 silly lockFile 1f1177db-tar tar://.
+15 verbose lock tar://. /home/blake/.npm/1f1177db-tar.lock
+16 silly lockFile ae21b52c-nerator-trees-0-0-12-package-tgz tar:///home/blake/.npm/generator-trees/0.0.12/package.tgz
+17 verbose lock tar:///home/blake/.npm/generator-trees/0.0.12/package.tgz /home/blake/.npm/ae21b52c-nerator-trees-0-0-12-package-tgz.lock
+18 silly lockFile 1f1177db-tar tar://.
+19 silly lockFile 1f1177db-tar tar://.
+20 silly lockFile ae21b52c-nerator-trees-0-0-12-package-tgz tar:///home/blake/.npm/generator-trees/0.0.12/package.tgz
+21 silly lockFile ae21b52c-nerator-trees-0-0-12-package-tgz tar:///home/blake/.npm/generator-trees/0.0.12/package.tgz
+22 silly lockFile 3cb8593a-m-generator-trees-0-0-12-package /home/blake/.npm/generator-trees/0.0.12/package
+23 verbose lock /home/blake/.npm/generator-trees/0.0.12/package /home/blake/.npm/3cb8593a-m-generator-trees-0-0-12-package.lock
+24 silly lockFile 3cb8593a-m-generator-trees-0-0-12-package /home/blake/.npm/generator-trees/0.0.12/package
+25 silly lockFile 3cb8593a-m-generator-trees-0-0-12-package /home/blake/.npm/generator-trees/0.0.12/package
+26 silly lockFile 3a52ce78- .
+27 silly lockFile 3a52ce78- .
+28 silly publish { name: 'generator-trees',
+28 silly publish   version: '0.0.12',
+28 silly publish   description: 'ES6 Generator Trees',
+28 silly publish   main: 'dist/index.js',
+28 silly publish   scripts: { test: 'echo "Error: no test specified" && exit 1' },
+28 silly publish   author: { name: 'Blake La Pierre' },
+28 silly publish   license: 'MIT',
+28 silly publish   dependencies:
+28 silly publish    { grunt: '^0.4.5',
+28 silly publish      'grunt-execute': '^0.2.2',
+28 silly publish      'grunt-traceur': '^0.2.9',
+28 silly publish      'load-grunt-tasks': '^1.0.0',
+28 silly publish      traceur: '0.0.72' },
+28 silly publish   devDependencies:
+28 silly publish    { jasmine: '^2.0.1',
+28 silly publish      karma: '^0.12.24',
+28 silly publish      'karma-jasmine': '^0.1.5' },
+28 silly publish   readme: 'A simple and highly configurable base project for ECMAScript 6 projects.\n\nFork it, `npm install`, drop your code in `src/index.js`, and then run `grunt` at the command line.\n\nPlace test code in `src/tests/index.js` and run it with `grunt test`.',
+28 silly publish   readmeFilename: 'Readme.md',
+28 silly publish   gitHead: '5dfdb7ac764763a2624ea0885ca51bc6375e6627',
+28 silly publish   _id: 'generator-trees@0.0.12',
+28 silly publish   _shasum: 'f528fbb2948719a37e1c00808515791d1c79ab22',
+28 silly publish   _from: '.' }
+29 verbose request where is /generator-trees
+30 verbose request registry https://registry.npmjs.org/
+31 verbose request id e2f345f2a433c2e5
+32 verbose url raw /generator-trees
+33 verbose url resolving [ 'https://registry.npmjs.org/', './generator-trees' ]
+34 verbose url resolved https://registry.npmjs.org/generator-trees
+35 verbose request where is https://registry.npmjs.org/generator-trees
+36 info trying registry request attempt 1 at 14:48:15
+37 http PUT https://registry.npmjs.org/generator-trees
+38 http 403 https://registry.npmjs.org/generator-trees
+39 verbose headers { date: 'Tue, 23 Dec 2014 22:48:17 GMT',
+39 verbose headers   server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+39 verbose headers   'content-type': 'application/json',
+39 verbose headers   'cache-control': 'max-age=60',
+39 verbose headers   'content-length': '2440',
+39 verbose headers   'accept-ranges': 'bytes',
+39 verbose headers   via: '1.1 varnish',
+39 verbose headers   'x-served-by': 'cache-lax1431-LAX',
+39 verbose headers   'x-cache': 'MISS',
+39 verbose headers   'x-cache-hits': '0',
+39 verbose headers   'x-timer': 'S1419374896.405667,VS0,VE1078',
+39 verbose headers   'keep-alive': 'timeout=10, max=50',
+39 verbose headers   connection: 'Keep-Alive' }
+40 error publish Failed PUT 403
+41 error Error: forbidden cannot modify pre-existing version: 0.0.12
+41 error old={"name":"generator-trees","version":"0.0.12","description":"ES6 Generator Trees","main":"dist/index.js","scripts":{"test":"echo \"Error: no test specified\" && exit 1"},"author":{"name":"Blake La Pierre"},"license":"MIT","dependencies":{"grunt":"^0.4.5","grunt-execute":"^0.2.2","grunt-traceur":"^0.2.9","load-grunt-tasks":"^1.0.0","traceur":"0.0.72"},"devDependencies":{"jasmine":"^2.0.1","karma":"^0.12.24","karma-jasmine":"^0.1.5"},"gitHead":"5dfdb7ac764763a2624ea0885ca51bc6375e6627","_id":"generator-trees@0.0.12","_shasum":"f528fbb2948719a37e1c00808515791d1c79ab22","_from":".","_npmVersion":"2.0.0","_npmUser":{"name":"blakelapierre","email":"blakelapierre@gmail.com"},"maintainers":[{"name":"blakelapierre","email":"blakelapierre@gmail.com"}],"dist":{"shasum":"f528fbb2948719a37e1c00808515791d1c79ab22","tarball":"http://registry.npmjs.org/generator-trees/-/generator-trees-0.0.12.tgz"}}
+41 error new={"name":"generator-trees","version":"0.0.12","description":"ES6 Generator Trees","main":"dist/index.js","scripts":{"test":"echo \"Error: no test specified\" && exit 1"},"author":{"name":"Blake La Pierre"},"license":"MIT","dependencies":{"grunt":"^0.4.5","grunt-execute":"^0.2.2","grunt-traceur":"^0.2.9","load-grunt-tasks":"^1.0.0","traceur":"0.0.72"},"devDependencies":{"jasmine":"^2.0.1","karma":"^0.12.24","karma-jasmine":"^0.1.5"},"readme":"A simple and highly configurable base project for ECMAScript 6 projects.\u000a\u000aFork it, `npm install`, drop your code in `src/index.js`, and then run `grunt` at the command line.\u000a\u000aPlace test code in `src/tests/index.js` and run it with `grunt test`.","readmeFilename":"Readme.md","gitHead":"5dfdb7ac764763a2624ea0885ca51bc6375e6627","_id":"generator-trees@0.0.12","_shasum":"f528fbb2948719a37e1c00808515791d1c79ab22","_from":".","_npmVersion":"1.4.23","_npmUser":{"name":"blakelapierre","email":"blakelapierre@gmail.com"},"maintainers":[{"name":"blakelapierre","email":"blakelapierre@gmail.com"}],"dist":{"shasum":"f528fbb2948719a37e1c00808515791d1c79ab22","tarball":"http://registry.npmjs.org/generator-trees/-/generator-trees-0.0.12.tgz"}}: generator-trees
+41 error     at RegClient.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:300:14)
+41 error     at Request._callback (/usr/local/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:238:65)
+41 error     at Request.self.callback (/usr/local/lib/node_modules/npm/node_modules/request/request.js:123:22)
+41 error     at Request.emit (events.js:98:17)
+41 error     at Request.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/request/request.js:893:14)
+41 error     at Request.emit (events.js:117:20)
+41 error     at IncomingMessage.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/request/request.js:844:12)
+41 error     at IncomingMessage.emit (events.js:117:20)
+41 error     at _stream_readable.js:943:16
+41 error     at process._tickCallback (node.js:419:13)
+42 error If you need help, you may report this *entire* log,
+42 error including the npm and node versions, at:
+42 error     <http://github.com/npm/npm/issues>
+43 error System Linux 3.17.6-200.fc20.x86_64
+44 error command "/usr/local/bin/node" "/usr/local/bin/npm" "publish"
+45 error cwd /home/blake/development/generator-trees
+46 error node -v v0.10.31
+47 error npm -v 1.4.23
+48 verbose exit [ 1, true ]
