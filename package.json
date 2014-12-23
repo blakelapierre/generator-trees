@@ -1,6 +1,6 @@
 {
   "name": "generator-trees",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "ES6 Generator Trees",
   "main": "dist/index.js",
   "scripts": {
