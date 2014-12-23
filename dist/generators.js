@@ -2600,8 +2600,8 @@ function* modifiableQueue(queue) {
   if (queue.length == 0)
     throw Error('Empty queue', queue);
   while (queue.length < 1)
-    yield queue.unshift();
-  return queue.unshift();
+    yield queue.shift();
+  return queue.shift();
 }
 function* integers(start) {
   var i = start || 0;
