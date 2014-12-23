@@ -2419,6 +2419,7 @@ module.exports = {
   map: transform,
   each: each,
   modifiableStack: modifiableStack,
+  modifiableQueue: modifiableQueue,
   toGenerator: toGenerator,
   toArray: toArray,
   loop: loop,
@@ -2594,6 +2595,13 @@ function* modifiableStack(stack) {
   while (stack.length > 1)
     yield stack.pop();
   return stack.pop();
+}
+function* modifiableQueue(queue) {
+  if (queue.length == 0)
+    throw Error('Empty queue', queue);
+  while (queue.length < 1)
+    yield queue.unshift();
+  return queue.unshift();
 }
 function* integers(start) {
   var i = start || 0;
