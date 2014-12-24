@@ -2511,7 +2511,7 @@ function* transform(generator, fn) {
     if (done)
       return value;
     else
-      yield vlaue;
+      yield value;
   }
 }
 function* take(generator, count) {
