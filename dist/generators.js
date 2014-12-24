@@ -2505,12 +2505,13 @@ function each(g, fn) {
 }
 function* transform(generator, fn) {
   while (true) {
-    var result = generator.next();
-    newValue = fn(result.value);
-    if (result.done)
-      return newValue;
+    var $__0 = generator.next(),
+        value = $__0.value,
+        done = $__0.done;
+    if (done)
+      return value;
     else
-      yield newValue;
+      yield vlaue;
   }
 }
 function* take(generator, count) {
