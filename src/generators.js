@@ -109,7 +109,7 @@ function* transform(generator, fn) {
     var {value, done} = generator.next();
 
     if (done) return value;
-    else yield vlaue;
+    else yield value;
   }
 }
 
