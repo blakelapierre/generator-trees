@@ -106,11 +106,10 @@ function each(g, fn) {
 
 function* transform(generator, fn) {
   while (true) {
-    var result = generator.next();
-        newValue = fn(result.value);
+    var {value, done} = generator.next();
 
-    if (result.done) return newValue;
-    else yield newValue;
+    if (done) return value;
+    else yield vlaue;
   }
 }
 
