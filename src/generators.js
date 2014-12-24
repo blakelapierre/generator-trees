@@ -108,8 +108,8 @@ function* transform(generator, fn) {
   while (true) {
     var {value, done} = generator.next();
 
-    if (done) return value;
-    else yield value;
+    if (done) return fn(value);
+    else yield fn(value);
   }
 }
 

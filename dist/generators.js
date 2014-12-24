@@ -2509,9 +2509,9 @@ function* transform(generator, fn) {
         value = $__0.value,
         done = $__0.done;
     if (done)
-      return value;
+      return fn(value);
     else
-      yield value;
+      yield fn(value);
   }
 }
 function* take(generator, count) {
