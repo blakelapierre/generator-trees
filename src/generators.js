@@ -197,6 +197,8 @@ function* toGenerator(array) {
   return array[i];
 }
 
+// if the stack is modified after popping the last element, the remaining
+// stack won't be generated...
 function* modifiableStack(stack) {
   if (stack.length == 0) throw Error('Empty stack', stack);
 
@@ -204,6 +206,8 @@ function* modifiableStack(stack) {
   return stack.pop();
 }
 
+// if the queue is modified after popping the last element, the remaining
+// queue won't be generated...
 function* modifiableQueue(queue) {
   if (queue.length == 0) throw Error('Empty queue', queue);
 
@@ -211,7 +215,29 @@ function* modifiableQueue(queue) {
   return queue.shift();
 }
 
-function* integers(start) {
+function* modifiableStackAlt(stack) {
+  if (stack.length == 0) throw Error('Empty stack', stack);
+
+  do { yield stack.pop(); } while (stack.length > 0);
+
+  return;
+}
+
+function* modifiableQueueAlt(queue) {
+  if (queue.length == 0) throw Error('Empty queue', queue);
+
+  do { yield queue.shift(); } while (queue.length > 0);
+
+  return;
+}
+
+function* integers(start, end) {
+  if (end != undefined) {
+    var i = start || 0;
+    while (i < end) yield i++;
+    return i;
+  }
+
   var i = start || 0;
   while (true) yield i++;
 }
