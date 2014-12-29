@@ -1,7 +1,7 @@
 module.exports = function(grunt) {
-  var pkg = grunt.file.readJSON('package.json');
-
   require('load-grunt-tasks')(grunt);
+
+  var pkg = grunt.file.readJSON('package.json');
 
   grunt.initConfig({
     pkg: pkg,
@@ -34,6 +34,19 @@ module.exports = function(grunt) {
         },
         src: ['dist/tests/index.js']
       }
+    },
+    mochaTest: {
+      test: {
+        options: {
+          harmony: true,
+          require: ['should', 'expect.js'],
+          reporter: 'spec',
+          captureFile: 'results.txt', // Optionally capture the reporter output to a file
+          quiet: false, // Optionally suppress output to standard out (defaults to false)
+          clearRequireCache: false // Optionally clear the require cache before running tests (defaults to false)
+        },
+        src: ['dist/tests/**/*.js']
+      }
     }
   });
 
@@ -46,6 +59,6 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('test', function() {
-    grunt.task.run('traceur:src', 'execute:test');
+    grunt.task.run('traceur:src', 'mochaTest:test');
   });
 };

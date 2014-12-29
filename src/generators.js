@@ -1,9 +1,12 @@
-module.exports = {
+let TERMINAL = Symbol();
+
+export {
   transform,
-  map: transform,
-  each: each,
+  transform as map,
+  each,
   modifiableStack,
   modifiableQueue,
+  modifiableStackAlt,
   toGenerator,
   toArray,
   loop,
@@ -12,7 +15,8 @@ module.exports = {
   repeatG,
   integers,
   take,
-  zip
+  zip,
+  TERMINAL
 };
 
 function* loop(g) {
@@ -108,7 +112,7 @@ function* transform(generator, fn) {
   while (true) {
     var {value, done} = generator.next();
 
-    if (done) return fn(value);
+    if (done) return value == TERMINAL ? value : fn(value); // Do we want to embed this terminal logic here?
     else yield fn(value);
   }
 }
@@ -181,9 +185,9 @@ function toArray(generator) {
   var array = [];
 
   while (true) {
-    var result = generator.next();
-    array.push(result.value);
-    if (result.done) return array;
+    let {value, done} = generator.next();
+    if (value != TERMINAL) array.push(value);
+    if (done) return array;
   }
 }
 
@@ -220,7 +224,7 @@ function* modifiableStackAlt(stack) {
 
   do { yield stack.pop(); } while (stack.length > 0);
 
-  return;
+  return TERMINAL;
 }
 
 function* modifiableQueueAlt(queue) {
@@ -228,7 +232,7 @@ function* modifiableQueueAlt(queue) {
 
   do { yield queue.shift(); } while (queue.length > 0);
 
-  return;
+  return TERMINAL;
 }
 
 function* integers(start, end) {
