@@ -2564,85 +2564,111 @@ System.registerModule("traceur-runtime@0.0.79/src/runtime/polyfills/polyfills.js
 });
 System.get("traceur-runtime@0.0.79/src/runtime/polyfills/polyfills.js" + '');
 "use strict";
-var __moduleName = "dist/tests/generators";
-var $__dist_47_generators__;
-var $__0 = ($__dist_47_generators__ = require("../generators"), $__dist_47_generators__ && $__dist_47_generators__.__esModule && $__dist_47_generators__ || {default: $__dist_47_generators__}),
-    repeat = $__0.repeat,
-    toArray = $__0.toArray,
-    toGenerator = $__0.toGenerator,
-    map = $__0.map,
-    transform = $__0.transform,
-    zip = $__0.zip,
-    modifiableStack = $__0.modifiableStack,
-    modifiableStackAlt = $__0.modifiableStackAlt;
-console.log('repeat', repeat);
-var should = require('should'),
-    expect = require('expect.js');
-describe('toArray', (function() {
-  it('should work with 1 value', (function() {
-    var value = 1,
-        generator = repeat(value, 1),
-        array = toArray(generator);
-    array.should.be.eql([1]);
-    array.should.not.be.eql([2]);
-  }));
-}));
-describe('transform', (function() {
-  var value = 1;
-  it('should work with 1 value', (function() {
-    var generator = repeat(value, 1);
-    expect(toArray(transform(generator, (function(value) {
-      return value + 1;
-    })))).to.be.eql([2]);
-  }));
-}));
-describe('zip', (function() {
-  var generators = toGenerator([toGenerator([1, 2, 3]), toGenerator([4, 5, 6])]);
-  var cases = [['{args}.length generators of {1}.length items each', [[[1, 2, 3], [4, 5, 6]], [[1, 4], [2, 5], [3, 6]]]]];
-  for (var $__1 = cases[$traceurRuntime.toProperty(Symbol.iterator)](),
-      $__2; !($__2 = $__1.next()).done; ) {
-    var c = $__2.value;
-    {
-      console.log(c);
-      var name = c[0],
-          parameters = c[1];
-      input = parameters[0], output = parameters[1];
-      it('should work with ' + name, (function() {
-        expect(toArray(zip(toGenerator([toGenerator(input[0]), toGenerator(input[1])])))).to.eql(output);
-      }));
-    }
-  }
-  it('should work with 2 generators of 3 items each', (function() {
-    expect(toArray(zip(generators))).to.be.eql([[1, 4], [2, 5], [3, 6]]);
-  }));
-}));
-describe('modifiableStackAlt', (function() {
-  var stack = [1];
-  it('should run 2 times', (function() {
+Object.defineProperties(exports, {
+  sync: {get: function() {
+      return sync;
+    }},
+  pipe: {get: function() {
+      return pipe;
+    }},
+  async: {get: function() {
+      return async;
+    }},
+  __esModule: {value: true}
+});
+var __moduleName = "dist/promises";
+;
+function sync(generator, notify, notifyError) {
+  return new Promise((function(resolve, reject) {
     var count = 0;
-    var array = toArray(map(modifiableStackAlt(stack), (function(value) {
-      count++;
-      if (count == 1)
-        stack.push(3);
-      return value;
-    })));
-    expect(count).to.equal(2);
-    expect(array).to.eql([1, 3]);
-  }));
-}));
-describe('stuff', (function() {
-  describe('should generate ' + 5 + ' tests', (function() {
-    var indices = [0, 1, 2, 3, 4];
-    var $__3 = function(i) {
-      it('should be ' + i, (function() {
-        expect(indices[i]).to.equal(i);
-      }));
-    };
-    for (var i = 0; i < 5; i++) {
-      $__3(i);
+    process(generator);
+    function process(generator) {
+      var $__0 = generator.next(),
+          value = $__0.value,
+          done = $__0.done;
+      value.then((function(result) {
+        count++;
+        notify(result, count);
+        if (done)
+          resolve(count);
+        else
+          process(generator);
+      }), notifyError ? error : reject);
+      function error(error) {
+        count++;
+        notifyError(error);
+        if (done)
+          resolve(count);
+        else
+          process(generator);
+      }
     }
   }));
-}));
+}
+function pipe(generator, notify, notifyError) {
+  return new Promise((function(resolve, reject) {
+    process(generator);
+    function process(generator) {
+      var $__0 = generator.next(),
+          value = $__0.value,
+          done = $__0.done;
+      value.then(next, error);
+      function next(result, done) {
+        notify(result);
+        if (done)
+          resolve(result);
+        else
+          process(generator);
+      }
+      function error(error) {
+        if (!notifyError)
+          reject(error);
+        else {
+          notifyError(error);
+          if (done)
+            resolve(count);
+          else
+            process(generator);
+        }
+      }
+    }
+  }));
+}
+function async(maxConcurrent, generator, notify, notifyError) {
+  return new Promise((function(resolve, reject) {
+    var count = 0,
+        running = 0,
+        finished = false;
+    process(generator);
+    function process(generator) {
+      running++;
+      count++;
+      var $__0 = generator.next(),
+          value = $__0.value,
+          done = $__0.done;
+      finished = done;
+      value.then((function(result) {
+        running--;
+        notify(result, count);
+        if (!finished)
+          process(generator);
+        else if (running == 0)
+          resolve(count);
+      }), notifyError ? error : reject);
+      if (running < maxConcurrent)
+        process(generator);
+    }
+    function error(error) {
+      running--;
+      count++;
+      notifyError(error);
+      if (!finished)
+        process(generator);
+      else if (running == 0)
+        resolve(count);
+    }
+  }));
+}
 
-//# sourceMappingURL=generators.map
-//# sourceURL=src/tests/generators.js
+//# sourceMappingURL=promises.map
+//# sourceURL=src/promises.js

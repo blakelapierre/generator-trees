@@ -10,7 +10,8 @@ module.exports = function(grunt) {
         modules: 'commonjs',
         sourceMaps: true,
         includeRuntime: true,
-        generators: 'parse'
+        generators: 'parse',
+        experimental: true
       },
       src: {
         files: [{

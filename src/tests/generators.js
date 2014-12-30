@@ -36,6 +36,25 @@ describe('zip', () => {
     toGenerator([4, 5, 6])
   ]);
 
+  let cases = [
+    ['{args}.length generators of {1}.length items each',
+      [[[1, 2, 3], [4, 5, 6]],
+        [[1,4],[2,5],[3,6]]]
+    ]
+  ];
+
+  for (let c of cases) {
+    console.log(c);
+    let name = c[0],
+        parameters = c[1]
+        input = parameters[0],
+        output = parameters[1];
+
+    it('should work with ' + name, () => {
+      expect(toArray(zip(toGenerator([toGenerator(input[0]), toGenerator(input[1])])))).to.eql(output);
+    });
+  }
+
   it('should work with 2 generators of 3 items each', () => {
     expect(toArray(zip(generators))).to.be.eql([[1,4], [2, 5], [3, 6]]);
   });
@@ -55,9 +74,18 @@ describe('modifiableStackAlt', () => {
       return value;
     }));
 
-    console.log('count', count);
-
     expect(count).to.equal(2);
     expect(array).to.eql([1, 3]);
+  });
+});
+
+describe('stuff', () => {
+  describe('should generate ' + 5 + ' tests', () => {
+    let indices = [0, 1, 2, 3, 4];
+    for (let i = 0; i < 5; i++) {
+      it('should be ' + i, () => {
+        expect(indices[i]).to.equal(i);
+      });
+    }
   });
 });
