@@ -113,7 +113,7 @@ function* transform(generator, fn) {
   while (true) {
     var {value, done} = generator.next();
 
-    if (done) return value == TERMINAL ? value : fn(value); // Do we want to embed this terminal logic here?
+    if (done) return value == TERMINAL ? TERMINAL : fn(value); // Do we want to embed this terminal logic here?
     else yield fn(value);
   }
 }
