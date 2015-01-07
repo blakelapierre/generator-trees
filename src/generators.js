@@ -7,6 +7,7 @@ export {
   modifiableStack,
   modifiableQueue,
   modifiableStackAlt,
+  modifiableQueueAlt,
   toGenerator,
   toArray,
   loop,

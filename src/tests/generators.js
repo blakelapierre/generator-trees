@@ -46,7 +46,7 @@ describe('zip', () => {
   for (let c of cases) {
     console.log(c);
     let name = c[0],
-        parameters = c[1]
+        parameters = c[1],
         input = parameters[0],
         output = parameters[1];
 

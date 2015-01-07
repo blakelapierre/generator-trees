@@ -2583,6 +2583,9 @@ Object.defineProperties(exports, {
   modifiableStackAlt: {get: function() {
       return modifiableStackAlt;
     }},
+  modifiableQueueAlt: {get: function() {
+      return modifiableQueueAlt;
+    }},
   toGenerator: {get: function() {
       return toGenerator;
     }},

@@ -2599,18 +2599,22 @@ describe('transform', (function() {
 describe('zip', (function() {
   var generators = toGenerator([toGenerator([1, 2, 3]), toGenerator([4, 5, 6])]);
   var cases = [['{args}.length generators of {1}.length items each', [[[1, 2, 3], [4, 5, 6]], [[1, 4], [2, 5], [3, 6]]]]];
-  for (var $__1 = cases[$traceurRuntime.toProperty(Symbol.iterator)](),
-      $__2; !($__2 = $__1.next()).done; ) {
+  var $__3 = function() {
     var c = $__2.value;
     {
       console.log(c);
       var name = c[0],
-          parameters = c[1];
-      input = parameters[0], output = parameters[1];
+          parameters = c[1],
+          input = parameters[0],
+          output = parameters[1];
       it('should work with ' + name, (function() {
         expect(toArray(zip(toGenerator([toGenerator(input[0]), toGenerator(input[1])])))).to.eql(output);
       }));
     }
+  };
+  for (var $__1 = cases[$traceurRuntime.toProperty(Symbol.iterator)](),
+      $__2; !($__2 = $__1.next()).done; ) {
+    $__3();
   }
   it('should work with 2 generators of 3 items each', (function() {
     expect(toArray(zip(generators))).to.be.eql([[1, 4], [2, 5], [3, 6]]);
@@ -2633,13 +2637,13 @@ describe('modifiableStackAlt', (function() {
 describe('stuff', (function() {
   describe('should generate ' + 5 + ' tests', (function() {
     var indices = [0, 1, 2, 3, 4];
-    var $__3 = function(i) {
+    var $__4 = function(i) {
       it('should be ' + i, (function() {
         expect(indices[i]).to.equal(i);
       }));
     };
     for (var i = 0; i < 5; i++) {
-      $__3(i);
+      $__4(i);
     }
   }));
 }));
