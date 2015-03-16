@@ -5,15 +5,12 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     pkg: pkg,
-    traceur: {
+    babel: {
       options: {
-        modules: 'commonjs',
-        sourceMaps: true,
-        includeRuntime: true,
-        generators: 'parse',
-        experimental: true
+        sourceMap: true,
+        optional: ["runtime"]
       },
-      src: {
+      dist: {
         files: [{
           expand: true,
           cwd: 'src',
@@ -22,6 +19,23 @@ module.exports = function(grunt) {
         }]
       }
     },
+    // traceur: {
+    //   options: {
+    //     modules: 'commonjs',
+    //     sourceMaps: true,
+    //     includeRuntime: true,
+    //     generators: 'parse',
+    //     experimental: true
+    //   },
+    //   src: {
+    //     files: [{
+    //       expand: true,
+    //       cwd: 'src',
+    //       src: ['**/*.js'],
+    //       dest: 'dist'
+    //     }]
+    //   }
+    // },
     execute: {
       launch: {
         options: {
@@ -52,14 +66,14 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('build', function() {
-    grunt.task.run('traceur:src');
+    grunt.task.run('babel:dist');
   });
 
   grunt.registerTask('default' , '', function() {
-    grunt.task.run('traceur:src', 'execute:launch');
+    grunt.task.run('babel:dist', 'execute:launch');
   });
 
   grunt.registerTask('test', function() {
-    grunt.task.run('traceur:src', 'mochaTest:test');
+    grunt.task.run('babel:dist', 'mochaTest:test');
   });
 };
