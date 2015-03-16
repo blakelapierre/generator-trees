@@ -1,4 +1,4 @@
-export {sync, pipe, async};
+module.exports = {sync, pipe, async};
 
 function sync(generator, notify, notifyError) {
   return new Promise((resolve, reject) => {
@@ -85,7 +85,7 @@ function async(maxConcurrent, generator, notify, notifyError) {
           },
           notifyError ? error : reject);
 
-      if (running < maxConcurrent) process(generator);
+      if (running < maxConcurrent && !finished) process(generator);
     }
 
     function error(error) {
