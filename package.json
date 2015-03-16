@@ -1,6 +1,6 @@
 {
   "name": "generator-trees",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "description": "ES6 Generator Trees",
   "repository": "https://github.com/blakelapierre/generator-trees",
   "main": "dist/index.js",
