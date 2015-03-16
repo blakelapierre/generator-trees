@@ -437,26 +437,25 @@ var toGenerator = _regeneratorRuntime.mark(function toGenerator(array) {
 
       case 3:
         i = 0;
-        i;
 
-      case 5:
+      case 4:
         if (!(i < length - 1)) {
-          context$1$0.next = 11;
+          context$1$0.next = 10;
           break;
         }
 
-        context$1$0.next = 8;
+        context$1$0.next = 7;
         return array[i];
 
-      case 8:
+      case 7:
         i++;
-        context$1$0.next = 5;
+        context$1$0.next = 4;
         break;
 
-      case 11:
+      case 10:
         return context$1$0.abrupt("return", array[i]);
 
-      case 12:
+      case 11:
       case "end":
         return context$1$0.stop();
     }
@@ -713,4 +712,6 @@ function toArray(generator) {
 }
 
 // Do we want to embed this terminal logic here?
+
+// var i = 0;
 //# sourceMappingURL=generators.js.map

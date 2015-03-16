@@ -2,12 +2,7 @@
 
 var _core = require("babel-runtime/core-js")["default"];
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.sync = sync;
-exports.pipe = pipe;
-exports.async = async;
+module.exports = { sync: sync, pipe: pipe, async: async };
 
 function sync(generator, notify, notifyError) {
   return new _core.Promise(function (resolve, reject) {
@@ -88,7 +83,7 @@ function async(maxConcurrent, generator, notify, notifyError) {
         if (!finished) process(generator);else if (running == 0) resolve(count);
       }, notifyError ? error : reject);
 
-      if (running < maxConcurrent) process(generator);
+      if (running < maxConcurrent && !finished) process(generator);
     }
 
     function error(error) {

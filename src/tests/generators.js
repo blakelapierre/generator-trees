@@ -20,6 +20,17 @@ describe('toArray', () => {
   });
 });
 
+describe('toGenerator', () => {
+  it('should work with 1 value', () => {
+    let generator = toGenerator([1]);
+
+    let {value, done} = generator.next();
+
+    expect(done).to.be(true);
+    expect(value).to.be(1);
+  });
+});
+
 describe('transform', () => {
   let value = 1;
 
@@ -27,6 +38,15 @@ describe('transform', () => {
     let generator = repeat(value, 1);
 
     expect(toArray(transform(generator, value => value + 1))).to.be.eql([2]);
+  });
+
+  it('should work with toGenerator', () => {
+    let generator = transform(toGenerator([1]), value => value + 1);
+
+    let {value, done} = generator.next();
+
+    expect(done).to.be(true);
+    expect(value).to.be(2);
   });
 });
 

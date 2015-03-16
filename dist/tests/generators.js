@@ -33,6 +33,20 @@ describe("toArray", function () {
   });
 });
 
+describe("toGenerator", function () {
+  it("should work with 1 value", function () {
+    var generator = toGenerator([1]);
+
+    var _generator$next = generator.next();
+
+    var value = _generator$next.value;
+    var done = _generator$next.done;
+
+    expect(done).to.be(true);
+    expect(value).to.be(1);
+  });
+});
+
 describe("transform", function () {
   var value = 1;
 
@@ -42,6 +56,20 @@ describe("transform", function () {
     expect(toArray(transform(generator, function (value) {
       return value + 1;
     }))).to.be.eql([2]);
+  });
+
+  it("should work with toGenerator", function () {
+    var generator = transform(toGenerator([1]), function (value) {
+      return value + 1;
+    });
+
+    var _generator$next = generator.next();
+
+    var value = _generator$next.value;
+    var done = _generator$next.done;
+
+    expect(done).to.be(true);
+    expect(value).to.be(2);
   });
 });
 

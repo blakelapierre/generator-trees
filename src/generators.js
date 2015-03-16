@@ -197,8 +197,10 @@ function* toGenerator(array) {
 
   if (length == 0) throw Error('What should we do here?');
 
-  var i = 0;
-  for (i; i < length - 1; i++) yield array[i];
+  // var i = 0;
+  for (var i = 0; i < length - 1; i++) {
+    yield array[i];
+  }
   return array[i];
 }
 
