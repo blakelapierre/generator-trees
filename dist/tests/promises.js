@@ -1,32 +1,28 @@
-"use strict";
+'use strict';
 
-var _core = require("babel-runtime/core-js")["default"];
+var _Promise = require('babel-runtime/core-js/promise')['default'];
 
-var _interopRequire = require("babel-runtime/helpers/interop-require")["default"];
+var _interopRequireWildcard = require('babel-runtime/helpers/interop-require-wildcard')['default'];
 
-var expect = _interopRequire(require("expect.js"));
+var _expect = require('expect.js');
 
-var _promises = require("../promises");
+var _expect2 = _interopRequireWildcard(_expect);
 
-var sync = _promises.sync;
-var async = _promises.async;
+var _sync$async = require('../promises');
 
-var _generators = require("../generators");
+var _toGenerator$transform = require('../generators');
 
-var toGenerator = _generators.toGenerator;
-var transform = _generators.transform;
-
-describe("sync", function () {
-  it("should run twice", function () {
-    sync(toGenerator([promise(1), promise(2)]), function (result, count) {
+describe('sync', function () {
+  it('should run twice', function () {
+    _sync$async.sync(_toGenerator$transform.toGenerator([promise(1), promise(2)]), function (result, count) {
       return console.log(count, result);
     }, function (error) {
-      return console.log("error", error);
+      return console.log('error', error);
     });
 
     var counter = 0;
     function promise(value) {
-      return new _core.Promise(function (resolve) {
+      return new _Promise(function (resolve) {
         counter++;
         resolve(value);
       });
@@ -34,22 +30,22 @@ describe("sync", function () {
   });
 });
 
-describe("async", function () {
-  it("should run once", function () {
+describe('async', function () {
+  it('should run once', function () {
     var counter = 0;
 
-    return async(2, transform(toGenerator([1]), function (value) {
+    return _sync$async.async(2, _toGenerator$transform.transform(_toGenerator$transform.toGenerator([1]), function (value) {
       return promise(value);
     }), function (result, count) {
       return console.log(count, result);
     }, function (error) {
-      return console.log("error", error);
+      return console.log('error', error);
     });
 
     function promise(value) {
-      return new _core.Promise(function (resolve) {
+      return new _Promise(function (resolve) {
         counter++;
-        console.log("counter", counter);
+        console.log('counter', counter);
         resolve(value);
       });
     }

@@ -1,11 +1,11 @@
 "use strict";
 
-var _core = require("babel-runtime/core-js")["default"];
+var _Promise = require("babel-runtime/core-js/promise")["default"];
 
 module.exports = { sync: sync, pipe: pipe, async: async };
 
 function sync(generator, notify, notifyError) {
-  return new _core.Promise(function (resolve, reject) {
+  return new _Promise(function (resolve, reject) {
     var count = 0;
     process(generator);
 
@@ -31,14 +31,14 @@ function sync(generator, notify, notifyError) {
 }
 
 function pipe(generator, notify, notifyError) {
-  return new _core.Promise(function (resolve, reject) {
+  return new _Promise(function (resolve, reject) {
     process(generator);
 
     function process(generator) {
-      var _generator$next = generator.next();
+      var _generator$next2 = generator.next();
 
-      var value = _generator$next.value;
-      var done = _generator$next.done;
+      var value = _generator$next2.value;
+      var done = _generator$next2.done;
 
       value.then(next, error);
       //notifyError ? error : reject);
@@ -59,7 +59,7 @@ function pipe(generator, notify, notifyError) {
 }
 
 function async(maxConcurrent, generator, notify, notifyError) {
-  return new _core.Promise(function (resolve, reject) {
+  return new _Promise(function (resolve, reject) {
     var count = 0,
         running = 0,
         finished = false;
@@ -70,10 +70,10 @@ function async(maxConcurrent, generator, notify, notifyError) {
       running++;
       count++;
 
-      var _generator$next = generator.next();
+      var _generator$next3 = generator.next();
 
-      var value = _generator$next.value;
-      var done = _generator$next.done;
+      var value = _generator$next3.value;
+      var done = _generator$next3.done;
 
       finished = done;
 
