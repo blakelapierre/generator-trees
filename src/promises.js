@@ -18,9 +18,9 @@ function sync(generator, notify, notifyError) {
           },
           notifyError ? error : reject);
 
-      function error(error) {
+      function error(e) {
         count++;
-        notifyError(error);
+        notifyError(e);
         if (done) resolve(count);
         else process(generator);
       }
@@ -47,10 +47,10 @@ function pipe(generator, notify, notifyError) {
         else process(generator);
       }
 
-      function error(error) {
-        if (!notifyError) reject(error);
+      function error(e) {
+        if (!notifyError) reject(e);
         else {
-          notifyError(error);
+          notifyError(e);
           if (done) resolve(count);
           else process(generator);
         }
@@ -81,19 +81,19 @@ function async(maxConcurrent, generator, notify, notifyError) {
             running--;
             notify(result, count);
             if (!finished) process(generator);
-            else if (running == 0) resolve(count);
+            else if (running === 0) resolve(count);
           },
           notifyError ? error : reject);
 
       if (running < maxConcurrent && !finished) process(generator);
     }
 
-    function error(error) {
+    function error(e) {
       running--;
       count++;
-      notifyError(error);
+      notifyError(e);
       if (!finished) process(generator);
-      else if (running == 0) resolve(count);
+      else if (running === 0) resolve(count);
     }
   });
 }

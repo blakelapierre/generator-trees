@@ -24,24 +24,23 @@ function* loop(g) {
   var q = [],
       next = 0;
 
-  var result;
   while(true) {
-    var result = g.next();
-    if (!result.done) {
-      q.push(result.value);
-      yield result.value;
+    let {value, done} = g.next();
+    if (!done) {
+      q.push(value);
+      yield value;
     }
     else break;
   }
 
   while (true) {
-    var result = g.next();
-    if (!result.done) {
-      q.push(result.value);
-      yield result.value;
+    let {value, done} = g.next();
+    if (!done) {
+      q.push(value);
+      yield value;
     }
     else {
-      var value = q[next];
+      let value = q[next];
       yield value;
       next = (next + 1) % q.length;
     }
@@ -63,7 +62,7 @@ function* interleave(generators) {
 
     if (result.done) {
       remove(generator);
-      if (q.length == 0) return result.value;
+      if (q.length === 0) return result.value;
     }
 
     next = next + 1;
@@ -76,7 +75,7 @@ function* interleave(generators) {
     if (index != -1) {
       q.splice(index, 1);
       if (next >= index) {
-        next = next == 0 ? q.length - 1 : next - 1;
+        next = next === 0 ? q.length - 1 : next - 1;
       }
     }
     else throw Error('Tried to remove object that is not in q', obj, q);
@@ -134,8 +133,8 @@ function* zip(generators) {
   while (remaining > 0) {
     var product = [];
     for (var i = 0; i < array.length; i++) {
-      var generator = array[i],
-          result = generator != null ? generator.next() : undefined;
+      var g = array[i],
+          result = g !== null && g !== undefined ? g.next() : undefined;
 
       if (result) {
         product.push(result.value);
@@ -147,7 +146,7 @@ function* zip(generators) {
       else product.push(undefined);
     }
 
-    if (remaining == 0) return product;
+    if (remaining === 0) return product;
     yield product;
   }
 }
@@ -167,8 +166,10 @@ function* repeatG(generator, count) {
     }
   };
 
-  for (var i = 0; i < count - 1; i++) {
-    yield function* () {
+  for (var i = 0; i < count - 1; i++) yield create();
+
+  function create() {
+    return function* () {
       for (var v = 0; v < values.length - 1; v++) yield values[v];
       return values[v];
     };
@@ -176,7 +177,7 @@ function* repeatG(generator, count) {
 }
 
 function* repeat(item, count) {
-  if (count == 0) throw new Error('why did you do that?');
+  if (count === 0) throw new Error('why did you do that?');
 
   for (var i = 0; i < count - 1; i++) yield item;
   return item;
@@ -195,7 +196,7 @@ function toArray(generator) {
 function* toGenerator(array) {
   var length = array.length;
 
-  if (length == 0) throw Error('What should we do here?');
+  if (length === 0) throw Error('What should we do here?');
 
   // var i = 0;
   for (var i = 0; i < length - 1; i++) {
@@ -207,7 +208,7 @@ function* toGenerator(array) {
 // if the stack is modified after popping the last element, the remaining
 // stack won't be generated...
 function* modifiableStack(stack) {
-  if (stack.length == 0) throw Error('Empty stack', stack);
+  if (stack.length === 0) throw Error('Empty stack', stack);
 
   while (stack.length > 1) yield stack.pop();
   return stack.pop();
@@ -216,14 +217,14 @@ function* modifiableStack(stack) {
 // if the queue is modified after popping the last element, the remaining
 // queue won't be generated...
 function* modifiableQueue(queue) {
-  if (queue.length == 0) throw Error('Empty queue', queue);
+  if (queue.length === 0) throw Error('Empty queue', queue);
 
   while (queue.length > 1) yield queue.shift();
   return queue.shift();
 }
 
 function* modifiableStackAlt(stack) {
-  if (stack.length == 0) throw Error('Empty stack', stack);
+  if (stack.length === 0) throw Error('Empty stack', stack);
 
   do { yield stack.pop(); } while (stack.length > 0);
 
@@ -231,7 +232,7 @@ function* modifiableStackAlt(stack) {
 }
 
 function* modifiableQueueAlt(queue) {
-  if (queue.length == 0) throw Error('Empty queue', queue);
+  if (queue.length === 0) throw Error('Empty queue', queue);
 
   do { yield queue.shift(); } while (queue.length > 0);
 
@@ -239,12 +240,12 @@ function* modifiableQueueAlt(queue) {
 }
 
 function* integers(start, end) {
-  if (end != undefined) {
-    var i = start || 0;
+  if (end !== undefined) {
+    let i = start || 0;
     while (i < end) yield i++;
     return i;
   }
 
-  var i = start || 0;
+  let i = start || 0;
   while (true) yield i++;
 }

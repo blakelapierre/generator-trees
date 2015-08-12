@@ -53,7 +53,7 @@ console.log('preorder', node);
 }
 
 function reduce(node, reduceFn, collapseFn, unitValue) {
-  if (unitValue == undefined) {
+  if (unitValue === undefined) {
     unitValue = collapseFn;
     collapseFn = reduceFn;
   }
@@ -222,7 +222,7 @@ function* breadthFirst(node, indent) {
 
   var queue = [{generator:node}];
 
-  while (queue.length != 0) {
+  while (queue.length !== 0) {
     var generator = queue.shift();
 
     while (true) {
@@ -232,7 +232,7 @@ function* breadthFirst(node, indent) {
       var firstResult = childGenerator.next();
 
       if (firstResult.done) {
-        if (result.done && queue.length == 0) return firstResult.value;
+        if (result.done && queue.length === 0) return firstResult.value;
       }
       else {
         queue.push({parent: firstResult.value, generator: childGenerator});
@@ -289,7 +289,7 @@ function printGenerator(generator) {
 }
 
 function* allBinaryTrees(size, valueGenerator) {
-  if (size == 0) return makeNode(undefined);
+  if (size === 0) return makeNode(undefined);
 
   // foreach (tree in trees) {
   //   yield tree;
@@ -320,24 +320,24 @@ function* allBinaryTrees(size, valueGenerator) {
 
 
 function* allBinaryTrees(size, valueGenerator, seed) {
-  if (size == 0) return makeFnNode(undefined);
+  if (size === 0) return makeFnNode(undefined);
 
   var nodeValue = valueGenerator(seed).next().value;
 
   if (size == 1) return makeFnNode(nodeValue);
 
-  var i = 0;
+  let i = 0;
   for (i; i < size - 1; i++) {
-    var left = allBinaryTrees(i, valueGenerator, nodeValue + 1);
+    let left = allBinaryTrees(i, valueGenerator, nodeValue + 1);
 
     while (true) {
-      var j = size - 1 - i,
+      let j = size - 1 - i,
           right = allBinaryTrees(j, valueGenerator, nodeValue + 1),
           leftResult = left.next(),
           createLeft = leftResult.value;
 
       while (true) {
-        var rightResult = right.next(),
+        let rightResult = right.next(),
             createRight = rightResult.value;
 
         yield makeFnNode(nodeValue, [createLeft, createRight]);
@@ -348,7 +348,7 @@ function* allBinaryTrees(size, valueGenerator, seed) {
     }
   }
 
-  var left = allBinaryTrees(i, valueGenerator, nodeValue + 1);
+  let left = allBinaryTrees(i, valueGenerator, nodeValue + 1);
   while (true) {
     var leftResult = left.next();
 
@@ -359,7 +359,7 @@ function* allBinaryTrees(size, valueGenerator, seed) {
 
 function* allTrees(size, maxChildren, parent, nodeValueGenerator) {
   console.log('all', size);
-  if (size == 0) return makeNode(undefined);
+  if (size === 0) return makeNode(undefined);
 
   nodeValue = nodeValueGenerator.next().value;
 
@@ -367,13 +367,13 @@ function* allTrees(size, maxChildren, parent, nodeValueGenerator) {
 
   yield makeNode(nodeValue);
 
-  var i = 0;
+  let i = 0;
   for (i; i < size - 1; i++) {
     console.log('i', i);
-    var left = allBinaryTrees(i, nodeValueGenerator);
+    let left = allBinaryTrees(i, nodeValueGenerator);
     console.log('left', left);
     while (true) {
-      var leftResult = left.next(),
+      let leftResult = left.next(),
           j = size - 1 - i,
           right = allBinaryTrees(j, nodeValueGenerator);
 
@@ -381,7 +381,7 @@ function* allTrees(size, maxChildren, parent, nodeValueGenerator) {
       console.log('right', right);
 
       while (true) {
-        var rightResult = right.next(),
+        let rightResult = right.next(),
             children = [];
 
         console.log('rightResult', rightResult);
@@ -394,7 +394,7 @@ function* allTrees(size, maxChildren, parent, nodeValueGenerator) {
         console.log('children', children);
         console.log('nodeValue', nodeValue);
 
-        var childValue = nodeValueGenerator.next().value;
+        let childValue = nodeValueGenerator.next().value;
         // yield makeNode(nodeValue, children.length > 0 ? children : undefined);
         yield makeNode(childValue, [leftResult.value, rightResult.value]);
 
@@ -404,10 +404,10 @@ function* allTrees(size, maxChildren, parent, nodeValueGenerator) {
     }
   }
 
-  var left = allBinaryTrees(i, nodeValueGenerator),
+  let left = allBinaryTrees(i, nodeValueGenerator),
       j = 0;
   while (true) {
-    var leftResult = left.next();
+    let leftResult = left.next();
 
     console.log('last leftResult', leftResult);
 
@@ -421,13 +421,13 @@ function* allTrees(size, maxChildren, parent, nodeValueGenerator) {
 function printTree(tree, level) {
   level = level || 0;
 
-  if (tree == undefined) return print('<undefined>');
+  if (tree === undefined) return print('<undefined>');
 
   var node = tree(),
       valueResult = node.next(),
       nodeValue = valueResult.value;
 
-  if (nodeValue == undefined) return;
+  if (nodeValue === undefined) return;
   if (valueResult.done) return print(nodeValue);
 
   printChild(node);
@@ -442,7 +442,7 @@ function printTree(tree, level) {
     var childResult = tree.next(),
         childValue = childResult.value;
 
-    if (childValue != undefined) printTree(childValue, level + 1);
+    if (childValue !== undefined) printTree(childValue, level + 1);
 
     return !childResult.done;
   }

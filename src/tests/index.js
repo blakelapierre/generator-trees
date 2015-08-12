@@ -22,7 +22,7 @@ function* reduceTest() {
     return function*() {
       return 7;
     };
-  }
+  };
 }
 
 var reduceTest = () => makeNode(1, [makeNode(2, [makeNode(3)]), makeNode(4), makeNode(5, [makeNode(6), makeNode(7)])]);
@@ -271,19 +271,19 @@ function* parseAsNode(obj, value) {
 
   function* childrenFunction(obj) {
     if (obj.length) {
-      for (var i = 0; i < obj.length - 1; i++) yield makeNode(obj[i]);
+      for (let i = 0; i < obj.length - 1; i++) yield makeNode(obj[i]);
       return makeNode(obj[i]);
     }
     else if (typeof obj == 'object') {
       var keys = Object.keys(obj);
 
-      if (keys.length == 0) throw new Error('is this allowed?');
+      if (keys.length === 0) throw new Error('is this allowed?');
 
-      for (var i = 0; i < keys.length - 1; i++) {
-        var key = keys[i];
-        var childValue = obj[key];
+      for (let i = 0; i < keys.length - 1; i++) {
+        let key = keys[i];
+        let childValue = obj[key];
 
-        yield makeNode(key, (childValue => () => childrenFunction(childValue))(childValue));
+        yield makeNode(key, ((childValue) => (() => childrenFunction(childValue)))(childValue));
 
         // There should be a call to makeNode in here somehweret
         // var generator = toNode(childValue, key);
@@ -295,8 +295,8 @@ function* parseAsNode(obj, value) {
         // }
       }
 
-      var key = keys[i];
-      var childValue = obj[key];
+      let key = keys[i];
+      let childValue = obj[key];
 
       return makeNode(key, () => childrenFunction(childValue));
 

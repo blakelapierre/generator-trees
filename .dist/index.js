@@ -1,3 +1,5 @@
+'use strict';
+
 require('babel/polyfill');
 
 module.exports = {
@@ -5,3 +7,4 @@ module.exports = {
   p: require('./promises'),
   t: require('./trees')
 };
+//# sourceMappingURL=index.js.map
